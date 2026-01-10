@@ -1,0 +1,16 @@
+You must output VALID JSON only. No markdown. No commentary. No extra keys.
+
+Task:
+Return a JSON object with exactly these keys:
+- "patient_age" (integer)
+- "chief_complaint" (string)
+- "risk_level" (string: "low" | "medium" | "high")
+- "next_step" (string)
+
+Scenario:
+A 54-year-old has chest tightness while walking upstairs. It improves with rest. Smoker. No known heart disease.
+
+Constraints:
+- Output must be a single JSON object.
+- No trailing text.
+- "risk_level" must be one of: low, medium, high.
