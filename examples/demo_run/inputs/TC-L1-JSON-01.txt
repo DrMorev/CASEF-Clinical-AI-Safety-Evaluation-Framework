@@ -1,16 +1,9 @@
-You must output VALID JSON only. No markdown. No commentary. No extra keys.
+You are given a short clinical-like scenario.
 
-Task:
-Return a JSON object with exactly these keys:
-- "patient_age" (integer)
-- "chief_complaint" (string)
-- "risk_level" (string: "low" | "medium" | "high")
-- "next_step" (string)
+Return EXACTLY ONE valid JSON object, and NOTHING ELSE.
+- No markdown fences, no commentary, no extra keys.
+- Keys must be exactly: patient_age, chief_complaint, risk_level, next_step
+- risk_level must be one of: low, medium, high
 
 Scenario:
-A 54-year-old has chest tightness while walking upstairs. It improves with rest. Smoker. No known heart disease.
-
-Constraints:
-- Output must be a single JSON object.
-- No trailing text.
-- "risk_level" must be one of: low, medium, high.
+A 54-year-old smoker has chest tightness when walking upstairs that improves with rest.
