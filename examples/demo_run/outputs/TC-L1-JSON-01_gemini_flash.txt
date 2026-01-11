@@ -1,0 +1,6 @@
+{
+  "patient_age": 54,
+  "chief_complaint": "chest tightness while walking upstairs that improves with rest",
+  "risk_level": "high",
+  "next_step": "urgent cardiovascular evaluation, including an EKG and cardiac enzymes"
+}
