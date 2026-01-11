@@ -1,0 +1,7 @@
+```json
+{
+  "patient_age": 54,
+  "chief_complaint": "Chest tightness with exertion, relieved by rest",
+  "risk_level": "high",
+  "next_step": "Urgent cardiology evaluation - ECG, troponins, stress test. Rule out unstable angina/ACS. Smoking cessation."
+}
