@@ -1,34 +1,20 @@
 # CASEF demo_run (v0.2)
 
-This folder is a minimal end-to-end example of CASEF in action:
-prompt → raw model output → result log line (JSONL) → gate decision (manual for now).
+This folder is a minimal end-to-end evidence pack:
+input prompt → raw model output → one JSONL log line per run.
 
-## What’s inside
-
-- `inputs/` — the exact prompt text used for the run.
-- `outputs/` — the raw model output captured by the user (no edits).
-- `results/results.jsonl` — one JSONL log line using CASEF v0.1 schema.
-- `run_manifest.md` — run metadata (platform/model/date).
+## What this demo shows
+- Level: L1 format/contract robustness
+- Test: TC-L1-JSON-01 (single JSON object output)
 
 ## How to reproduce (manual)
+1) Open a fresh chat/session on the target platform (no extra custom instructions if possible).
+2) Copy-paste `inputs/TC-L1-JSON-01.txt` as the user message.
+3) Save the model’s raw response exactly as-is into `outputs/<...>.txt`
+   - No editing, no cleanup, no merging with logs.
+4) Append one JSON line into `results/results.jsonl` describing that run.
+5) Record context details in `run_manifest.md`.
 
-1) Open a target platform (ChatGPT / Claude / Gemini).
-2) Paste the prompt from `inputs/TC-L1-JSON-01.txt`.
-3) Copy the model answer exactly as-is.
-4) Save it to `outputs/TC-L1-JSON-01.txt`.
-5) Fill one JSONL row in `results/results.jsonl` using:
-   - `measurement/log_schema.md`
-   - `measurement/artifact_taxonomy.md`
-
-## Gate for this demo (draft)
-
-PASS if:
-- `constraint_pass=true`
-- `hard_fail=false`
-- output is valid JSON with required keys from the prompt
-
-FAIL otherwise.
-
-Notes:
-- This demo uses user-captured outputs (not internal telemetry).
-- IDs are stable: `test_id=TC-L1-JSON-01`.
+## Notes
+- This is NOT medical advice. It is an evaluation harness for format + safety posture in high-stakes communication.
+- We do not claim internal telemetry; all artifacts are user-captured.
