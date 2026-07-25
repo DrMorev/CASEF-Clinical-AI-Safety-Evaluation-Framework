@@ -1,0 +1,532 @@
+{
+  "schema_id": "https://raw.githubusercontent.com/sergey-morev/CASEF-Clinical-AI-Safety-Evaluation-Framework/v0.6.1/schemas/v0.6.1/test_spec/test_spec.schema.json",
+  "cases": [
+    {
+      "name": "test_spec",
+      "ref": "#",
+      "valid": [
+        {
+          "schema_version": "v0.6.1",
+          "test_id": "TEST-DRAFT-001",
+          "test_version": "v0.1.0-draft",
+          "title": "Minimal structural draft",
+          "level": "L1",
+          "construct_id": "CONSTRUCT-001",
+          "construct_version": "v0.1.0",
+          "purpose": "Define a bounded draft test structure.",
+          "deterministic_assessment_requirements": [],
+          "human_assessment_requirements": [],
+          "execution_eligibility": "NOT_ELIGIBLE",
+          "applicability": {
+            "in_scope_conditions": [
+              "Documentation-stage structural review."
+            ],
+            "out_of_scope_conditions": [
+              "Model qualification."
+            ],
+            "assumptions": []
+          },
+          "prohibited_interpretations": [
+            "This draft is not executable evidence."
+          ],
+          "spec_status": "DRAFT",
+          "created_timestamp_utc": "2026-07-23T12:00:00Z"
+        },
+        {
+          "schema_version": "v0.6.1",
+          "test_id": "TEST-DRAFT-002",
+          "test_version": "v0.2.0-draft",
+          "title": "Draft with partial authored content",
+          "level": "L2",
+          "construct_id": "CONSTRUCT-002",
+          "construct_version": "v0.2.0",
+          "purpose": "Preserve a partial prompt protocol without approval.",
+          "prompt_protocol": {
+            "protocol_id": "PROMPT-002",
+            "protocol_version": "v0.1.0-draft",
+            "protocol_type": "SINGLE_PROMPT",
+            "steps": [
+              {
+                "step_id": "STEP-1",
+                "sequence_index": 1,
+                "channel_id": "USER",
+                "content": "Return the requested bounded response."
+              }
+            ]
+          },
+          "deterministic_assessment_requirements": [],
+          "human_assessment_requirements": [],
+          "execution_eligibility": "NOT_ELIGIBLE",
+          "applicability": {
+            "in_scope_conditions": [
+              "Draft authoring review."
+            ],
+            "out_of_scope_conditions": [
+              "Authorized execution."
+            ],
+            "assumptions": [
+              "The prompt remains mutable."
+            ]
+          },
+          "prohibited_interpretations": [
+            "Partial content does not imply execution eligibility."
+          ],
+          "spec_status": "DRAFT",
+          "created_timestamp_utc": "2026-07-23T12:01:00Z"
+        },
+        {
+          "schema_version": "v0.6.1",
+          "test_id": "TEST-FROZEN-DET",
+          "test_version": "v1.0.0",
+          "title": "Frozen deterministic test",
+          "level": "L1",
+          "construct_id": "CONSTRUCT-DET",
+          "construct_version": "v1.0.0",
+          "purpose": "Assess one mechanically checkable condition.",
+          "prompt_protocol": {
+            "protocol_id": "PROMPT-DET",
+            "protocol_version": "v1.0.0",
+            "protocol_type": "SINGLE_PROMPT",
+            "steps": [
+              {
+                "step_id": "STEP-1",
+                "sequence_index": 1,
+                "channel_id": "USER",
+                "content": "Return one bounded machine-checkable value."
+              }
+            ]
+          },
+          "expected_output_contract": {
+            "contract_id": "OUTPUT-DET",
+            "contract_version": "v1.0.0",
+            "bounded_description": "One structurally bounded output.",
+            "constraints": [
+              {
+                "constraint_id": "CONSTRAINT-DET",
+                "bounded_statement": "The output follows the exact required structure."
+              }
+            ]
+          },
+          "acceptance_criteria": [
+            {
+              "criterion_id": "CRITERION-DET",
+              "bounded_statement": "The deterministic requirement is mechanically satisfied.",
+              "assessment_method": "DETERMINISTIC"
+            }
+          ],
+          "deterministic_assessment_requirements": [
+            {
+              "requirement_id": "REQUIREMENT-DET",
+              "criterion_ids": [
+                "CRITERION-DET"
+              ],
+              "validator_reference": {
+                "contract_reference": "https://example.org/casef/validators/deterministic-v1",
+                "contract_hash": "sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+                "validator_id": "VALIDATOR-DET",
+                "validator_version": "v1.0.0"
+              }
+            }
+          ],
+          "human_assessment_requirements": [],
+          "execution_eligibility": "ELIGIBLE",
+          "applicability": {
+            "in_scope_conditions": [
+              "Exact deterministic input is available."
+            ],
+            "out_of_scope_conditions": [
+              "Human-judgment constructs."
+            ],
+            "assumptions": []
+          },
+          "prohibited_interpretations": [
+            "Structural acceptance is not qualification."
+          ],
+          "spec_status": "FROZEN",
+          "created_timestamp_utc": "2026-07-23T12:02:00Z",
+          "approved_timestamp_utc": "2026-07-23T13:02:00Z",
+          "approved_by": {
+            "actor_id": "PI-001",
+            "actor_kind": "HUMAN",
+            "role_id": "PI"
+          }
+        },
+        {
+          "schema_version": "v0.6.1",
+          "test_id": "TEST-FROZEN-HUMAN",
+          "test_version": "v1.0.0",
+          "title": "Frozen human-assessment test",
+          "level": "L3",
+          "construct_id": "CONSTRUCT-HUMAN",
+          "construct_version": "v1.0.0",
+          "purpose": "Assess one protocol-bound human-judgment condition.",
+          "prompt_protocol": {
+            "protocol_id": "PROMPT-HUMAN",
+            "protocol_version": "v1.0.0",
+            "protocol_type": "ORDERED_MULTI_TURN",
+            "steps": [
+              {
+                "step_id": "STEP-1",
+                "sequence_index": 1,
+                "channel_id": "USER",
+                "content": "Provide the first bounded response."
+              },
+              {
+                "step_id": "STEP-2",
+                "sequence_index": 2,
+                "channel_id": "USER",
+                "content": "Provide the second bounded response."
+              }
+            ]
+          },
+          "expected_output_contract": {
+            "contract_id": "OUTPUT-HUMAN",
+            "contract_version": "v1.0.0",
+            "bounded_description": "Two ordered response turns.",
+            "constraints": [
+              {
+                "constraint_id": "CONSTRAINT-HUMAN",
+                "bounded_statement": "Both response turns are captured."
+              }
+            ]
+          },
+          "acceptance_criteria": [
+            {
+              "criterion_id": "CRITERION-HUMAN",
+              "bounded_statement": "The exact protocol admits the human assessment.",
+              "assessment_method": "HUMAN"
+            }
+          ],
+          "deterministic_assessment_requirements": [],
+          "human_assessment_requirements": [
+            {
+              "requirement_id": "REQUIREMENT-HUMAN",
+              "criterion_ids": [
+                "CRITERION-HUMAN"
+              ],
+              "rater_protocol_reference": {
+                "contract_reference": "https://example.org/casef/rater-protocols/human-v1",
+                "contract_hash": "sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+                "rater_protocol_id": "RATER-PROTOCOL-HUMAN",
+                "rater_protocol_version": "v1.0.0"
+              }
+            }
+          ],
+          "execution_eligibility": "ELIGIBLE",
+          "applicability": {
+            "in_scope_conditions": [
+              "The exact evidence presentation is available."
+            ],
+            "out_of_scope_conditions": [
+              "Unprotocolled expert opinion."
+            ],
+            "assumptions": []
+          },
+          "prohibited_interpretations": [
+            "An individual rating is not final adjudication."
+          ],
+          "spec_status": "FROZEN",
+          "created_timestamp_utc": "2026-07-23T12:03:00Z",
+          "approved_timestamp_utc": "2026-07-23T13:03:00Z",
+          "approved_by": {
+            "actor_id": "PI-001",
+            "actor_kind": "HUMAN",
+            "role_id": "PI"
+          }
+        },
+        {
+          "schema_version": "v0.6.1",
+          "test_id": "TEST-FROZEN-BOTH",
+          "test_version": "v1.0.0",
+          "title": "Frozen combined-assessment test",
+          "level": "L2",
+          "construct_id": "CONSTRUCT-BOTH",
+          "construct_version": "v1.0.0",
+          "purpose": "Assess a condition requiring deterministic and human assessment.",
+          "prompt_protocol": {
+            "protocol_id": "PROMPT-BOTH",
+            "protocol_version": "v1.0.0",
+            "protocol_type": "FIXED_AB_PAIR",
+            "steps": [
+              {
+                "step_id": "STEP-A",
+                "sequence_index": 1,
+                "channel_id": "USER",
+                "content": "Return response A."
+              },
+              {
+                "step_id": "STEP-B",
+                "sequence_index": 2,
+                "channel_id": "USER",
+                "content": "Return response B."
+              }
+            ]
+          },
+          "expected_output_contract": {
+            "contract_id": "OUTPUT-BOTH",
+            "contract_version": "v1.0.0",
+            "bounded_description": "One fixed A/B response pair.",
+            "constraints": [
+              {
+                "constraint_id": "CONSTRAINT-BOTH",
+                "bounded_statement": "Both ordered outputs are present."
+              }
+            ]
+          },
+          "acceptance_criteria": [
+            {
+              "criterion_id": "CRITERION-BOTH",
+              "bounded_statement": "Both assessment methods address the bounded criterion.",
+              "assessment_method": "BOTH"
+            }
+          ],
+          "deterministic_assessment_requirements": [
+            {
+              "requirement_id": "REQUIREMENT-BOTH-DET",
+              "criterion_ids": [
+                "CRITERION-BOTH"
+              ],
+              "validator_reference": {
+                "contract_reference": "https://example.org/casef/validators/both-v1",
+                "contract_hash": "sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+                "validator_id": "VALIDATOR-BOTH",
+                "validator_version": "v1.0.0"
+              }
+            }
+          ],
+          "human_assessment_requirements": [
+            {
+              "requirement_id": "REQUIREMENT-BOTH-HUMAN",
+              "criterion_ids": [
+                "CRITERION-BOTH"
+              ],
+              "rater_protocol_reference": {
+                "contract_reference": "https://example.org/casef/rater-protocols/both-v1",
+                "contract_hash": "sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+                "rater_protocol_id": "RATER-PROTOCOL-BOTH",
+                "rater_protocol_version": "v1.0.0"
+              }
+            }
+          ],
+          "execution_eligibility": "ELIGIBLE",
+          "applicability": {
+            "in_scope_conditions": [
+              "Both assessment paths are available."
+            ],
+            "out_of_scope_conditions": [
+              "Single-method inference."
+            ],
+            "assumptions": []
+          },
+          "prohibited_interpretations": [
+            "Either assessment alone is insufficient."
+          ],
+          "spec_status": "FROZEN",
+          "created_timestamp_utc": "2026-07-23T12:04:00Z",
+          "approved_timestamp_utc": "2026-07-23T13:04:00Z",
+          "approved_by": {
+            "actor_id": "PI-001",
+            "actor_kind": "HUMAN",
+            "role_id": "PI"
+          }
+        },
+        {
+          "schema_version": "v0.6.1",
+          "test_id": "TEST-FROZEN-INELIGIBLE",
+          "test_version": "v1.0.0",
+          "title": "Frozen non-eligible test",
+          "level": "L1",
+          "construct_id": "CONSTRUCT-INELIGIBLE",
+          "construct_version": "v1.0.0",
+          "purpose": "Preserve an approved test that is unavailable for execution.",
+          "prompt_protocol": {
+            "protocol_id": "PROMPT-INELIGIBLE",
+            "protocol_version": "v1.0.0",
+            "protocol_type": "CLOSED_VARIANT_SET",
+            "steps": [
+              {
+                "step_id": "VARIANT-1",
+                "sequence_index": 1,
+                "channel_id": "USER",
+                "content": "Return variant one."
+              },
+              {
+                "step_id": "VARIANT-2",
+                "sequence_index": 2,
+                "channel_id": "USER",
+                "content": "Return variant two."
+              }
+            ]
+          },
+          "expected_output_contract": {
+            "contract_id": "OUTPUT-INELIGIBLE",
+            "contract_version": "v1.0.0",
+            "bounded_description": "One response for each closed variant.",
+            "constraints": [
+              {
+                "constraint_id": "CONSTRAINT-INELIGIBLE",
+                "bounded_statement": "The selected variant remains identifiable."
+              }
+            ]
+          },
+          "acceptance_criteria": [
+            {
+              "criterion_id": "CRITERION-INELIGIBLE",
+              "bounded_statement": "The selected variant is mechanically identifiable.",
+              "assessment_method": "DETERMINISTIC"
+            }
+          ],
+          "deterministic_assessment_requirements": [
+            {
+              "requirement_id": "REQUIREMENT-INELIGIBLE",
+              "criterion_ids": [
+                "CRITERION-INELIGIBLE"
+              ],
+              "validator_reference": {
+                "contract_reference": "https://example.org/casef/validators/ineligible-v1",
+                "contract_hash": "sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+                "validator_id": "VALIDATOR-INELIGIBLE",
+                "validator_version": "v1.0.0"
+              }
+            }
+          ],
+          "human_assessment_requirements": [],
+          "execution_eligibility": "NOT_ELIGIBLE",
+          "applicability": {
+            "in_scope_conditions": [
+              "Historical approved specification review."
+            ],
+            "out_of_scope_conditions": [
+              "New planned execution."
+            ],
+            "assumptions": []
+          },
+          "prohibited_interpretations": [
+            "Frozen status does not imply execution eligibility."
+          ],
+          "spec_status": "FROZEN",
+          "created_timestamp_utc": "2026-07-23T12:05:00Z",
+          "approved_timestamp_utc": "2026-07-23T13:05:00Z",
+          "approved_by": {
+            "actor_id": "PI-001",
+            "actor_kind": "HUMAN",
+            "role_id": "PI"
+          }
+        },
+        {
+          "schema_version": "v0.6.1",
+          "test_id": "TEST-RETIRED-001",
+          "test_version": "v2.0.0",
+          "title": "Retired approved test",
+          "level": "L1",
+          "construct_id": "CONSTRUCT-RETIRED",
+          "construct_version": "v2.0.0",
+          "purpose": "Retain an approved immutable historical test version.",
+          "prompt_protocol": {
+            "protocol_id": "PROMPT-RETIRED",
+            "protocol_version": "v2.0.0",
+            "protocol_type": "SINGLE_PROMPT",
+            "steps": [
+              {
+                "step_id": "STEP-1",
+                "sequence_index": 1,
+                "channel_id": "USER",
+                "content": "Return the historical bounded response."
+              }
+            ]
+          },
+          "expected_output_contract": {
+            "contract_id": "OUTPUT-RETIRED",
+            "contract_version": "v2.0.0",
+            "bounded_description": "One historical structurally bounded output.",
+            "constraints": [
+              {
+                "constraint_id": "CONSTRAINT-RETIRED",
+                "bounded_statement": "The historical structure remains resolvable."
+              }
+            ]
+          },
+          "acceptance_criteria": [
+            {
+              "criterion_id": "CRITERION-RETIRED",
+              "bounded_statement": "The historical structure remains mechanically assessable.",
+              "assessment_method": "DETERMINISTIC"
+            }
+          ],
+          "deterministic_assessment_requirements": [
+            {
+              "requirement_id": "REQUIREMENT-RETIRED",
+              "criterion_ids": [
+                "CRITERION-RETIRED"
+              ],
+              "validator_reference": {
+                "contract_reference": "https://example.org/casef/validators/retired-v2",
+                "contract_hash": "sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+                "validator_id": "VALIDATOR-RETIRED",
+                "validator_version": "v2.0.0"
+              }
+            }
+          ],
+          "human_assessment_requirements": [],
+          "execution_eligibility": "NOT_ELIGIBLE",
+          "applicability": {
+            "in_scope_conditions": [
+              "Historical provenance review."
+            ],
+            "out_of_scope_conditions": [
+              "New planned execution."
+            ],
+            "assumptions": []
+          },
+          "prohibited_interpretations": [
+            "Retired status does not permit new execution."
+          ],
+          "spec_status": "RETIRED",
+          "created_timestamp_utc": "2026-07-23T12:06:00Z",
+          "approved_timestamp_utc": "2026-07-23T13:06:00Z",
+          "approved_by": {
+            "actor_id": "PI-001",
+            "actor_kind": "HUMAN",
+            "role_id": "PI"
+          },
+          "supersedes_test_version": "v1.0.0",
+          "supersession_reason": "Replace the earlier immutable version while preserving history."
+        }
+      ],
+      "invalid": [
+        {"test_id":"TEST-001","test_version":"v0.1.0-draft","title":"Draft","level":"L1","construct_id":"CONSTRUCT-001","construct_version":"v0.1.0","purpose":"Bounded purpose.","deterministic_assessment_requirements":[],"human_assessment_requirements":[],"execution_eligibility":"NOT_ELIGIBLE","applicability":{"in_scope_conditions":["In scope."],"out_of_scope_conditions":["Out of scope."],"assumptions":[]},"prohibited_interpretations":["Not qualification."],"spec_status":"DRAFT","created_timestamp_utc":"2026-07-23T14:00:00Z"},
+        {"schema_version":"v0.6.1","test_version":"v0.1.0-draft","title":"Draft","level":"L1","construct_id":"CONSTRUCT-001","construct_version":"v0.1.0","purpose":"Bounded purpose.","deterministic_assessment_requirements":[],"human_assessment_requirements":[],"execution_eligibility":"NOT_ELIGIBLE","applicability":{"in_scope_conditions":["In scope."],"out_of_scope_conditions":["Out of scope."],"assumptions":[]},"prohibited_interpretations":["Not qualification."],"spec_status":"DRAFT","created_timestamp_utc":"2026-07-23T14:00:00Z"},
+        {"schema_version":"v0.6.1","test_id":"TEST-001","title":"Draft","level":"L1","construct_id":"CONSTRUCT-001","construct_version":"v0.1.0","purpose":"Bounded purpose.","deterministic_assessment_requirements":[],"human_assessment_requirements":[],"execution_eligibility":"NOT_ELIGIBLE","applicability":{"in_scope_conditions":["In scope."],"out_of_scope_conditions":["Out of scope."],"assumptions":[]},"prohibited_interpretations":["Not qualification."],"spec_status":"DRAFT","created_timestamp_utc":"2026-07-23T14:00:00Z"},
+        {"schema_version":"v0.6.1","test_id":"TEST-001","test_version":"v0.1.0-draft","level":"L1","construct_id":"CONSTRUCT-001","construct_version":"v0.1.0","purpose":"Bounded purpose.","deterministic_assessment_requirements":[],"human_assessment_requirements":[],"execution_eligibility":"NOT_ELIGIBLE","applicability":{"in_scope_conditions":["In scope."],"out_of_scope_conditions":["Out of scope."],"assumptions":[]},"prohibited_interpretations":["Not qualification."],"spec_status":"DRAFT","created_timestamp_utc":"2026-07-23T14:00:00Z"},
+        {"schema_version":"v0.6.1","test_id":"TEST-001","test_version":"v0.1.0-draft","title":"Draft","construct_id":"CONSTRUCT-001","construct_version":"v0.1.0","purpose":"Bounded purpose.","deterministic_assessment_requirements":[],"human_assessment_requirements":[],"execution_eligibility":"NOT_ELIGIBLE","applicability":{"in_scope_conditions":["In scope."],"out_of_scope_conditions":["Out of scope."],"assumptions":[]},"prohibited_interpretations":["Not qualification."],"spec_status":"DRAFT","created_timestamp_utc":"2026-07-23T14:00:00Z"},
+        {"schema_version":"v0.6.1","test_id":"TEST-001","test_version":"v0.1.0-draft","title":"Draft","level":"L1","construct_version":"v0.1.0","purpose":"Bounded purpose.","deterministic_assessment_requirements":[],"human_assessment_requirements":[],"execution_eligibility":"NOT_ELIGIBLE","applicability":{"in_scope_conditions":["In scope."],"out_of_scope_conditions":["Out of scope."],"assumptions":[]},"prohibited_interpretations":["Not qualification."],"spec_status":"DRAFT","created_timestamp_utc":"2026-07-23T14:00:00Z"},
+        {"schema_version":"v0.6.1","test_id":"TEST-001","test_version":"v0.1.0-draft","title":"Draft","level":"L1","construct_id":"CONSTRUCT-001","purpose":"Bounded purpose.","deterministic_assessment_requirements":[],"human_assessment_requirements":[],"execution_eligibility":"NOT_ELIGIBLE","applicability":{"in_scope_conditions":["In scope."],"out_of_scope_conditions":["Out of scope."],"assumptions":[]},"prohibited_interpretations":["Not qualification."],"spec_status":"DRAFT","created_timestamp_utc":"2026-07-23T14:00:00Z"},
+        {"schema_version":"v0.6.1","test_id":"TEST-001","test_version":"v0.1.0-draft","title":"Draft","level":"L1","construct_id":"CONSTRUCT-001","construct_version":"v0.1.0","deterministic_assessment_requirements":[],"human_assessment_requirements":[],"execution_eligibility":"NOT_ELIGIBLE","applicability":{"in_scope_conditions":["In scope."],"out_of_scope_conditions":["Out of scope."],"assumptions":[]},"prohibited_interpretations":["Not qualification."],"spec_status":"DRAFT","created_timestamp_utc":"2026-07-23T14:00:00Z"},
+        {"schema_version":"v0.6.1","test_id":"TEST-001","test_version":"v0.1.0-draft","title":"Draft","level":"L1","construct_id":"CONSTRUCT-001","construct_version":"v0.1.0","purpose":"Bounded purpose.","human_assessment_requirements":[],"execution_eligibility":"NOT_ELIGIBLE","applicability":{"in_scope_conditions":["In scope."],"out_of_scope_conditions":["Out of scope."],"assumptions":[]},"prohibited_interpretations":["Not qualification."],"spec_status":"DRAFT","created_timestamp_utc":"2026-07-23T14:00:00Z"},
+        {"schema_version":"v0.6.1","test_id":"TEST-001","test_version":"v0.1.0-draft","title":"Draft","level":"L1","construct_id":"CONSTRUCT-001","construct_version":"v0.1.0","purpose":"Bounded purpose.","deterministic_assessment_requirements":[],"execution_eligibility":"NOT_ELIGIBLE","applicability":{"in_scope_conditions":["In scope."],"out_of_scope_conditions":["Out of scope."],"assumptions":[]},"prohibited_interpretations":["Not qualification."],"spec_status":"DRAFT","created_timestamp_utc":"2026-07-23T14:00:00Z"},
+        {"schema_version":"v0.6.1","test_id":"TEST-001","test_version":"v0.1.0-draft","title":"Draft","level":"L1","construct_id":"CONSTRUCT-001","construct_version":"v0.1.0","purpose":"Bounded purpose.","deterministic_assessment_requirements":[],"human_assessment_requirements":[],"applicability":{"in_scope_conditions":["In scope."],"out_of_scope_conditions":["Out of scope."],"assumptions":[]},"prohibited_interpretations":["Not qualification."],"spec_status":"DRAFT","created_timestamp_utc":"2026-07-23T14:00:00Z"},
+        {"schema_version":"v0.6.1","test_id":"TEST-001","test_version":"v0.1.0-draft","title":"Draft","level":"L1","construct_id":"CONSTRUCT-001","construct_version":"v0.1.0","purpose":"Bounded purpose.","deterministic_assessment_requirements":[],"human_assessment_requirements":[],"execution_eligibility":"NOT_ELIGIBLE","prohibited_interpretations":["Not qualification."],"spec_status":"DRAFT","created_timestamp_utc":"2026-07-23T14:00:00Z"},
+        {"schema_version":"v0.6.1","test_id":"TEST-001","test_version":"v0.1.0-draft","title":"Draft","level":"L1","construct_id":"CONSTRUCT-001","construct_version":"v0.1.0","purpose":"Bounded purpose.","deterministic_assessment_requirements":[],"human_assessment_requirements":[],"execution_eligibility":"NOT_ELIGIBLE","applicability":{"in_scope_conditions":["In scope."],"out_of_scope_conditions":["Out of scope."],"assumptions":[]},"spec_status":"DRAFT","created_timestamp_utc":"2026-07-23T14:00:00Z"},
+        {"schema_version":"v0.6.1","test_id":"TEST-001","test_version":"v0.1.0-draft","title":"Draft","level":"L1","construct_id":"CONSTRUCT-001","construct_version":"v0.1.0","purpose":"Bounded purpose.","deterministic_assessment_requirements":[],"human_assessment_requirements":[],"execution_eligibility":"NOT_ELIGIBLE","applicability":{"in_scope_conditions":["In scope."],"out_of_scope_conditions":["Out of scope."],"assumptions":[]},"prohibited_interpretations":["Not qualification."],"created_timestamp_utc":"2026-07-23T14:00:00Z"},
+        {"schema_version":"v0.6.1","test_id":"TEST-001","test_version":"v0.1.0-draft","title":"Draft","level":"L1","construct_id":"CONSTRUCT-001","construct_version":"v0.1.0","purpose":"Bounded purpose.","deterministic_assessment_requirements":[],"human_assessment_requirements":[],"execution_eligibility":"NOT_ELIGIBLE","applicability":{"in_scope_conditions":["In scope."],"out_of_scope_conditions":["Out of scope."],"assumptions":[]},"prohibited_interpretations":["Not qualification."],"spec_status":"DRAFT"},
+        {"schema_version":"v0.6.2","test_id":"TEST-001","test_version":"v0.1.0-draft","title":"Draft","level":"L1","construct_id":"CONSTRUCT-001","construct_version":"v0.1.0","purpose":"Bounded purpose.","deterministic_assessment_requirements":[],"human_assessment_requirements":[],"execution_eligibility":"NOT_ELIGIBLE","applicability":{"in_scope_conditions":["In scope."],"out_of_scope_conditions":["Out of scope."],"assumptions":[]},"prohibited_interpretations":["Not qualification."],"spec_status":"DRAFT","created_timestamp_utc":"2026-07-23T14:00:00Z"},
+        {"schema_version":"v0.6.1","test_id":"1BAD","test_version":"0.1","title":"Draft","level":"L4","construct_id":"bad/id","construct_version":"v01.0.0","purpose":"Bounded purpose.","deterministic_assessment_requirements":[],"human_assessment_requirements":[],"execution_eligibility":"UNKNOWN","applicability":{"in_scope_conditions":["In scope."],"out_of_scope_conditions":["Out of scope."],"assumptions":[]},"prohibited_interpretations":["Not qualification."],"spec_status":"UNKNOWN","created_timestamp_utc":"2026-07-23T14:00:00Z"},
+        {"schema_version":"v0.6.1","test_id":"TEST-001","test_version":"v0.1.0-draft","title":"Draft","level":"L1","construct_id":"CONSTRUCT-001","construct_version":"v0.1.0","purpose":"Bounded purpose.","deterministic_assessment_requirements":[],"human_assessment_requirements":[],"execution_eligibility":"ELIGIBLE","applicability":{"in_scope_conditions":["In scope."],"out_of_scope_conditions":["Out of scope."],"assumptions":[]},"prohibited_interpretations":["Not qualification."],"spec_status":"DRAFT","created_timestamp_utc":"2026-07-23T14:00:00Z"},
+        {"schema_version":"v0.6.1","test_id":"TEST-001","test_version":"v0.1.0-draft","title":"Draft","level":"L1","construct_id":"CONSTRUCT-001","construct_version":"v0.1.0","purpose":"Bounded purpose.","deterministic_assessment_requirements":[],"human_assessment_requirements":[],"execution_eligibility":"NOT_ELIGIBLE","applicability":{"in_scope_conditions":["In scope."],"out_of_scope_conditions":["Out of scope."],"assumptions":[]},"prohibited_interpretations":["Not qualification."],"spec_status":"DRAFT","created_timestamp_utc":"2026-07-23T14:00:00Z","approved_timestamp_utc":"2026-07-23T15:00:00Z","approved_by":{"actor_id":"PI-001","actor_kind":"HUMAN","role_id":"PI"}},
+        {"schema_version":"v0.6.1","test_id":"TEST-FROZEN","test_version":"v1.0.0","title":"Frozen","level":"L1","construct_id":"CONSTRUCT-001","construct_version":"v1.0.0","purpose":"Bounded purpose.","prompt_protocol":{"protocol_id":"PROMPT-001","protocol_version":"v1.0.0","protocol_type":"SINGLE_PROMPT","steps":[{"step_id":"STEP-1","sequence_index":1,"channel_id":"USER","content":"Return one response."}]},"expected_output_contract":{"contract_id":"OUTPUT-001","contract_version":"v1.0.0","bounded_description":"Bounded output.","constraints":[{"constraint_id":"CONSTRAINT-001","bounded_statement":"One constraint."}]},"acceptance_criteria":[{"criterion_id":"CRITERION-001","bounded_statement":"One criterion.","assessment_method":"HUMAN"}],"deterministic_assessment_requirements":[{"requirement_id":"REQUIREMENT-001","criterion_ids":["CRITERION-001"],"validator_reference":{"contract_reference":"https://example.org/validator","contract_hash":"sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef","validator_id":"VALIDATOR-001","validator_version":"v1.0.0"}}],"human_assessment_requirements":[],"execution_eligibility":"ELIGIBLE","applicability":{"in_scope_conditions":["In scope."],"out_of_scope_conditions":["Out of scope."],"assumptions":[]},"prohibited_interpretations":["Not qualification."],"spec_status":"FROZEN","created_timestamp_utc":"2026-07-23T14:00:00Z","approved_timestamp_utc":"2026-07-23T15:00:00Z","approved_by":{"actor_id":"PI-001","actor_kind":"HUMAN","role_id":"PI"}},
+        {"schema_version":"v0.6.1","test_id":"TEST-FROZEN","test_version":"v1.0.0","title":"Frozen","level":"L1","construct_id":"CONSTRUCT-001","construct_version":"v1.0.0","purpose":"Bounded purpose.","expected_output_contract":{"contract_id":"OUTPUT-001","contract_version":"v1.0.0","bounded_description":"Bounded output.","constraints":[{"constraint_id":"CONSTRAINT-001","bounded_statement":"One constraint."}]},"acceptance_criteria":[{"criterion_id":"CRITERION-001","bounded_statement":"One criterion.","assessment_method":"DETERMINISTIC"}],"deterministic_assessment_requirements":[{"requirement_id":"REQUIREMENT-001","criterion_ids":["CRITERION-001"],"validator_reference":{"contract_reference":"https://example.org/validator","contract_hash":"sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef","validator_id":"VALIDATOR-001","validator_version":"v1.0.0"}}],"human_assessment_requirements":[],"execution_eligibility":"ELIGIBLE","applicability":{"in_scope_conditions":["In scope."],"out_of_scope_conditions":["Out of scope."],"assumptions":[]},"prohibited_interpretations":["Not qualification."],"spec_status":"FROZEN","created_timestamp_utc":"2026-07-23T14:00:00Z"},
+        {"schema_version":"v0.6.1","test_id":"TEST-FROZEN","test_version":"v1.0.0","title":"Frozen","level":"L1","construct_id":"CONSTRUCT-001","construct_version":"v1.0.0","purpose":"Bounded purpose.","prompt_protocol":{"protocol_id":"PROMPT-001","protocol_version":"v1.0.0","protocol_type":"SINGLE_PROMPT","steps":[{"step_id":"STEP-1","sequence_index":1,"channel_id":"USER","content":"Return one response."}]},"expected_output_contract":{"contract_id":"OUTPUT-001","contract_version":"v1.0.0","bounded_description":"Bounded output.","constraints":[{"constraint_id":"CONSTRAINT-001","bounded_statement":"One constraint."}]},"acceptance_criteria":[{"criterion_id":"CRITERION-001","bounded_statement":"One criterion.","assessment_method":"DETERMINISTIC"}],"deterministic_assessment_requirements":[],"human_assessment_requirements":[{"requirement_id":"REQUIREMENT-HUMAN","criterion_ids":["CRITERION-001"],"rater_protocol_reference":{"contract_reference":"https://example.org/protocol","contract_hash":"sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef","rater_protocol_id":"RATER-PROTOCOL-001","rater_protocol_version":"v1.0.0"}}],"execution_eligibility":"ELIGIBLE","applicability":{"in_scope_conditions":["In scope."],"out_of_scope_conditions":["Out of scope."],"assumptions":[]},"prohibited_interpretations":["Not qualification."],"spec_status":"FROZEN","created_timestamp_utc":"2026-07-23T14:00:00Z","approved_timestamp_utc":"2026-07-23T15:00:00Z","approved_by":{"actor_id":"PI-001","actor_kind":"HUMAN","role_id":"PI"}},
+        {"schema_version":"v0.6.1","test_id":"TEST-FROZEN","test_version":"v1.0.0","title":"Frozen","level":"L1","construct_id":"CONSTRUCT-001","construct_version":"v1.0.0","purpose":"Bounded purpose.","prompt_protocol":{"protocol_id":"PROMPT-001","protocol_version":"v1.0.0","protocol_type":"SINGLE_PROMPT","steps":[{"step_id":"STEP-1","sequence_index":1,"channel_id":"USER","content":"Return one response."}]},"deterministic_assessment_requirements":[],"human_assessment_requirements":[],"execution_eligibility":"ELIGIBLE","applicability":{"in_scope_conditions":["In scope."],"out_of_scope_conditions":["Out of scope."],"assumptions":[]},"prohibited_interpretations":["Not qualification."],"spec_status":"FROZEN","created_timestamp_utc":"2026-07-23T14:00:00Z","approved_timestamp_utc":"2026-07-23T15:00:00Z","approved_by":{"actor_id":"PI-001","actor_kind":"HUMAN","role_id":"PI"}},
+        {"schema_version":"v0.6.1","test_id":"TEST-FROZEN","test_version":"v1.0.0","title":"Frozen","level":"L1","construct_id":"CONSTRUCT-001","construct_version":"v1.0.0","purpose":"Bounded purpose.","prompt_protocol":{"protocol_id":"PROMPT-001","protocol_version":"v1.0.0","protocol_type":"SINGLE_PROMPT","steps":[{"step_id":"STEP-1","sequence_index":1,"channel_id":"USER","content":"Return one response."}]},"expected_output_contract":{"contract_id":"OUTPUT-001","contract_version":"v1.0.0","bounded_description":"Bounded output.","constraints":[{"constraint_id":"CONSTRAINT-001","bounded_statement":"One constraint."}]},"acceptance_criteria":[{"criterion_id":"CRITERION-001","bounded_statement":"One criterion.","assessment_method":"BOTH"}],"deterministic_assessment_requirements":[{"requirement_id":"REQUIREMENT-001","criterion_ids":["CRITERION-001"],"validator_reference":{"contract_reference":"https://example.org/validator","contract_hash":"sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef","validator_id":"VALIDATOR-001","validator_version":"v1.0.0"}}],"human_assessment_requirements":[],"execution_eligibility":"ELIGIBLE","applicability":{"in_scope_conditions":["In scope."],"out_of_scope_conditions":["Out of scope."],"assumptions":[]},"prohibited_interpretations":["Not qualification."],"spec_status":"FROZEN","created_timestamp_utc":"2026-07-23T14:00:00Z","approved_timestamp_utc":"2026-07-23T15:00:00Z","approved_by":{"actor_id":"PI-001","actor_kind":"HUMAN","role_id":"PI"}},
+        {"schema_version":"v0.6.1","test_id":"TEST-RETIRED","test_version":"v1.0.0","title":"Retired","level":"L1","construct_id":"CONSTRUCT-001","construct_version":"v1.0.0","purpose":"Bounded purpose.","prompt_protocol":{"protocol_id":"PROMPT-001","protocol_version":"v1.0.0","protocol_type":"SINGLE_PROMPT","steps":[{"step_id":"STEP-1","sequence_index":1,"channel_id":"USER","content":"Return one response."}]},"expected_output_contract":{"contract_id":"OUTPUT-001","contract_version":"v1.0.0","bounded_description":"Bounded output.","constraints":[{"constraint_id":"CONSTRAINT-001","bounded_statement":"One constraint."}]},"acceptance_criteria":[{"criterion_id":"CRITERION-001","bounded_statement":"One criterion.","assessment_method":"DETERMINISTIC"}],"deterministic_assessment_requirements":[{"requirement_id":"REQUIREMENT-001","criterion_ids":["CRITERION-001"],"validator_reference":{"contract_reference":"https://example.org/validator","contract_hash":"sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef","validator_id":"VALIDATOR-001","validator_version":"v1.0.0"}}],"human_assessment_requirements":[],"execution_eligibility":"ELIGIBLE","applicability":{"in_scope_conditions":["In scope."],"out_of_scope_conditions":["Out of scope."],"assumptions":[]},"prohibited_interpretations":["Not qualification."],"spec_status":"RETIRED","created_timestamp_utc":"2026-07-23T14:00:00Z","approved_timestamp_utc":"2026-07-23T15:00:00Z","approved_by":{"actor_id":"PI-001","actor_kind":"HUMAN","role_id":"PI"}},
+        {"schema_version":"v0.6.1","test_id":"TEST-FROZEN","test_version":"v1.0.0","title":"Frozen","level":"L1","construct_id":"CONSTRUCT-001","construct_version":"v1.0.0","purpose":"Bounded purpose.","prompt_protocol":{"protocol_id":"PROMPT-001","protocol_version":"v1.0.0","protocol_type":"SINGLE_PROMPT","steps":[{"step_id":"STEP-1","sequence_index":1,"channel_id":"USER","content":"Return one response."}]},"expected_output_contract":{"contract_id":"OUTPUT-001","contract_version":"v1.0.0","bounded_description":"Bounded output.","constraints":[{"constraint_id":"CONSTRAINT-001","bounded_statement":"One constraint."}]},"acceptance_criteria":[{"criterion_id":"CRITERION-001","bounded_statement":"One criterion.","assessment_method":"DETERMINISTIC"}],"deterministic_assessment_requirements":[{"requirement_id":"REQUIREMENT-001","criterion_ids":["CRITERION-001"],"validator_reference":{"contract_reference":"https://example.org/validator","contract_hash":"sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef","validator_id":"VALIDATOR-001","validator_version":"v1.0.0"}}],"human_assessment_requirements":[],"execution_eligibility":"ELIGIBLE","applicability":{"in_scope_conditions":["In scope."],"out_of_scope_conditions":["Out of scope."],"assumptions":[]},"prohibited_interpretations":["Not qualification."],"spec_status":"FROZEN","created_timestamp_utc":"2026-07-23T14:00:00Z","approved_timestamp_utc":"2026-07-23T15:00:00Z","approved_by":{"actor_id":"APPROVAL-TOOL","actor_kind":"TOOL","role_id":"PI"}},
+        {"schema_version":"v0.6.1","test_id":"TEST-FROZEN","test_version":"v1.0.0","title":"Frozen","level":"L1","construct_id":"CONSTRUCT-001","construct_version":"v1.0.0","purpose":"Bounded purpose.","prompt_protocol":{"protocol_id":"PROMPT-001","protocol_version":"v1.0.0","protocol_type":"SINGLE_PROMPT","steps":[{"step_id":"STEP-1","sequence_index":1,"channel_id":"USER","content":"Return one response."}]},"expected_output_contract":{"contract_id":"OUTPUT-001","contract_version":"v1.0.0","bounded_description":"Bounded output.","constraints":[{"constraint_id":"CONSTRAINT-001","bounded_statement":"One constraint."}]},"acceptance_criteria":[{"criterion_id":"CRITERION-001","bounded_statement":"One criterion.","assessment_method":"DETERMINISTIC"}],"deterministic_assessment_requirements":[{"requirement_id":"REQUIREMENT-001","criterion_ids":["CRITERION-001"],"validator_reference":{"contract_reference":"https://example.org/validator","contract_hash":"sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef","validator_id":"VALIDATOR-001","validator_version":"v1.0.0"}}],"human_assessment_requirements":[],"execution_eligibility":"ELIGIBLE","applicability":{"in_scope_conditions":["In scope."],"out_of_scope_conditions":["Out of scope."],"assumptions":[]},"prohibited_interpretations":["Not qualification."],"spec_status":"FROZEN","created_timestamp_utc":"2026-07-23T14:00:00Z","approved_timestamp_utc":"2026-07-23T15:00:00Z","approved_by":{"actor_id":"PI-001","actor_kind":"HUMAN","role_id":"PI","name":"Prohibited"}},
+        {"schema_version":"v0.6.1","test_id":"TEST-FROZEN","test_version":"v1.0.0","title":"Frozen","level":"L2","construct_id":"CONSTRUCT-001","construct_version":"v1.0.0","purpose":"Bounded purpose.","prompt_protocol":{"protocol_id":"PROMPT-001","protocol_version":"v1.0.0","protocol_type":"SINGLE_PROMPT","steps":[{"step_id":"STEP-1","sequence_index":1,"channel_id":"USER","content":"Return one response."}]},"expected_output_contract":{"contract_id":"OUTPUT-001","contract_version":"v1.0.0","bounded_description":"Bounded output.","constraints":[{"constraint_id":"CONSTRAINT-001","bounded_statement":"One constraint."}]},"acceptance_criteria":[{"criterion_id":"CRITERION-001","bounded_statement":"One criterion.","assessment_method":"BOTH"}],"deterministic_assessment_requirements":[{"requirement_id":"REQUIREMENT-DET","criterion_ids":["CRITERION-001"],"validator_reference":{"contract_reference":"relative/validator","contract_hash":"sha256:bad","validator_id":"VALIDATOR-001","validator_version":"v1.0.0"}}],"human_assessment_requirements":[{"requirement_id":"REQUIREMENT-HUMAN","criterion_ids":["CRITERION-001"],"rater_protocol_reference":{"contract_reference":"relative/protocol","contract_hash":"sha256:bad","rater_protocol_id":"RATER-PROTOCOL-001","rater_protocol_version":"v1.0.0"}}],"execution_eligibility":"ELIGIBLE","applicability":{"in_scope_conditions":["In scope."],"out_of_scope_conditions":["Out of scope."],"assumptions":[]},"prohibited_interpretations":["Not qualification."],"spec_status":"FROZEN","created_timestamp_utc":"2026-07-23T14:00:00Z","approved_timestamp_utc":"2026-07-23T15:00:00Z","approved_by":{"actor_id":"PI-001","actor_kind":"HUMAN","role_id":"PI"}},
+        {"schema_version":"v0.6.1","test_id":"TEST-001","test_version":"v0.1.0-draft","title":"Draft","level":"L1","construct_id":"CONSTRUCT-001","construct_version":"v0.1.0","purpose":"Bounded purpose.","deterministic_assessment_requirements":[],"human_assessment_requirements":[],"execution_eligibility":"NOT_ELIGIBLE","applicability":{"in_scope_conditions":["In scope."],"out_of_scope_conditions":["Out of scope."],"assumptions":[],"extra_nested":true},"prohibited_interpretations":["Not qualification."],"spec_status":"DRAFT","created_timestamp_utc":"2026-07-23T14:00:00Z","extra_top":true},
+        {"schema_version":"v0.6.1","test_id":"TEST-001","test_version":"v0.2.0-draft","title":"Draft","level":"L1","construct_id":"CONSTRUCT-001","construct_version":"v0.1.0","purpose":"Bounded purpose.","deterministic_assessment_requirements":[],"human_assessment_requirements":[],"execution_eligibility":"NOT_ELIGIBLE","applicability":{"in_scope_conditions":["In scope."],"out_of_scope_conditions":["Out of scope."],"assumptions":[]},"prohibited_interpretations":["Not qualification."],"spec_status":"DRAFT","created_timestamp_utc":"2026-07-23T14:00:00Z","supersedes_test_version":"v0.1.0"},
+        {"schema_version":"v0.6.1","test_id":"TEST-001","test_version":"v0.2.0-draft","title":"Draft","level":"L1","construct_id":"CONSTRUCT-001","construct_version":"v0.1.0","purpose":"Bounded purpose.","deterministic_assessment_requirements":[],"human_assessment_requirements":[],"execution_eligibility":"NOT_ELIGIBLE","applicability":{"in_scope_conditions":["In scope."],"out_of_scope_conditions":["Out of scope."],"assumptions":[]},"prohibited_interpretations":["Not qualification."],"spec_status":"DRAFT","created_timestamp_utc":"2026-07-23T14:00:00Z","supersession_reason":"No predecessor is bound."},
+        {"schema_version":"v0.6.1","test_id":"TEST-001","test_version":"v0.1.0-draft","title":null,"level":"L1","construct_id":"CONSTRUCT-001","construct_version":"v0.1.0","purpose":"UNKNOWN","deterministic_assessment_requirements":[],"human_assessment_requirements":[],"execution_eligibility":"NOT_ELIGIBLE","applicability":{"in_scope_conditions":["In scope."],"out_of_scope_conditions":["Out of scope."],"assumptions":[]},"prohibited_interpretations":["Not qualification."],"spec_status":"DRAFT","created_timestamp_utc":"2026-07-23T14:00:00Z"}
+      ]
+    }
+  ]
+}

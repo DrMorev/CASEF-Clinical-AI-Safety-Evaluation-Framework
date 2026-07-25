@@ -136,6 +136,8 @@ This document creates no active blocking rule.
 
 ## 11. Current v0.6.1 implementation status
 
-CASEF v0.6.1 retains documentation-level six-record ownership and gate boundaries. All six canonical record contracts and the canonical serialization contract are documented; Context of Use and the rater-protocol contract are documented separately. Development-stage common scalar, hash, reference-base, repository-provenance, and actor-identity JSON Schemas now exist. No canonical record schema, executable owner-specific validator, or executable rater protocol exists. No serializer, hash implementation, storage, dispatch, runner, evidence generation, automated qualification, or canonical qualification pipeline exists.
+CASEF v0.6.1 retains documentation-level six-record ownership and gate boundaries. All six canonical record contracts and the canonical serialization contract are documented; Context of Use and the rater-protocol contract are documented separately. Development-stage common schemas now exist, and one of the six canonical record schemas is implemented: `test_spec`. The other five canonical record schemas remain unimplemented.
+
+No canonical test-specification instance or evidence chain exists. No executable owner-specific validator or rater protocol, serializer, hash implementation, storage, dispatch, runner, evidence generation, automated qualification, or canonical qualification pipeline exists.
 
 No canonical qualification pipeline is executable until required protocol instances, tooling, validation, and PI-approved gate rules are implemented and reviewed.

@@ -59,12 +59,12 @@ Those facts belong to the other canonical records identified by `docs/canonical_
 | `prohibited_interpretations` | Required collection | Claims or inferences that the test does not support, including conclusions broader than its construct and evidence |
 | `spec_status` | Required | Exactly `DRAFT`, `FROZEN`, or `RETIRED` |
 | `created_timestamp_utc` | Required | Canonical UTC timestamp for creation of the specification version |
-| `approved_timestamp_utc` | Required for `FROZEN` or `RETIRED` | Canonical UTC timestamp of approval; null or absent only for an unapproved `DRAFT` |
-| `approved_by` | Required for `FROZEN` or `RETIRED` | Identity and approval role for the exact version; null or absent only for an unapproved `DRAFT` |
-| `supersedes_test_version` | Optional | Earlier version of the same `test_id` superseded by this version; null or absent when none exists |
-| `supersession_reason` | Conditionally required | Bounded reason for supersession; required when `supersedes_test_version` is present and otherwise null or absent |
+| `approved_timestamp_utc` | Required for `FROZEN` or `RETIRED` | Canonical UTC timestamp of approval; for an unapproved `DRAFT`, the field must be absent and null is prohibited |
+| `approved_by` | Required for `FROZEN` or `RETIRED` | Identity and approval role for the exact version; for an unapproved `DRAFT`, the field must be absent and null is prohibited |
+| `supersedes_test_version` | Optional | Earlier version of the same `test_id` superseded by this version; when no predecessor exists, the field must be absent and null is prohibited |
+| `supersession_reason` | Conditionally required | Bounded reason for supersession; required when `supersedes_test_version` is present; otherwise, the field must be absent and null is prohibited |
 
-The future executable schema must define serialization and timestamp syntax. String sentinels such as `"NONE"`, `"N/A"`, or `"UNKNOWN"` must not substitute for null or field absence.
+Canonical serialization and timestamp syntax are governed by `docs/canonical_serialization_contract.md` and implemented by the reviewed executable schemas. Canonical `test_spec` serialization uses field absence for these non-applicable optional states. Null and sentinel strings such as `"NONE"`, `"N/A"`, or `"UNKNOWN"` are prohibited substitutes.
 
 ## 4. Stable identity and versioning invariants
 
@@ -120,4 +120,6 @@ The specification's `prohibited_interpretations` must prevent claims broader tha
 
 ## 9. Current v0.6.1 implementation status
 
-This document defines a contract only. Existing test assets have not yet been migrated to this canonical form, and no JSON Schema, validator, runner, manifest instance, or canonical evidence is created by this patch.
+The development-stage executable [`test_spec` schema](../schemas/v0.6.1/test_spec/test_spec.schema.json) and machine-readable structural vectors now exist. The vectors are not approved or canonical test-specification instances. Current Markdown test assets remain `DRAFT` and `NOT_ELIGIBLE` and have not been migrated into serialized canonical instances.
+
+No approved canonical test-specification instance, runner, execution-manifest instance, model execution, evidence, validator execution, qualification, or gate execution exists.

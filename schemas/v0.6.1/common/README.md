@@ -61,4 +61,4 @@ The vectors are lexical and structural test data, not canonical records or evide
 
 ## Next dependency layer
 
-Specialized owner-specific references and the first canonical record schema remain deferred to separate reviewed tasks. No canonical record schema exists yet.
+The first complete canonical-record schema, `test_spec`, now exists and composes these common definitions. Specialized owner-specific schemas and the remaining five canonical record schemas remain deferred. The common definitions remain subordinate reusable components and do not acquire record ownership.

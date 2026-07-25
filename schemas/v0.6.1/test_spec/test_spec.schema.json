@@ -1,0 +1,717 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/sergey-morev/CASEF-Clinical-AI-Safety-Evaluation-Framework/v0.6.1/schemas/v0.6.1/test_spec/test_spec.schema.json",
+  "title": "CASEF v0.6.1 canonical test specification",
+  "description": "Complete executable structural schema for one canonical CASEF test_spec record.",
+  "$comment": "Development artifact: not represented as released until the immutable v0.6.1 Git tag exists. Structural validation does not establish scientific validity, evidence eligibility, execution success, qualification, or use permission.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "test_id",
+    "test_version",
+    "title",
+    "level",
+    "construct_id",
+    "construct_version",
+    "purpose",
+    "deterministic_assessment_requirements",
+    "human_assessment_requirements",
+    "execution_eligibility",
+    "applicability",
+    "prohibited_interpretations",
+    "spec_status",
+    "created_timestamp_utc"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "v0.6.1"
+    },
+    "test_id": {
+      "$ref": "../common/scalars.schema.json#/$defs/stable_identifier"
+    },
+    "test_version": {
+      "$ref": "../common/scalars.schema.json#/$defs/authored_version"
+    },
+    "title": {
+      "$ref": "#/$defs/non_blank_string"
+    },
+    "level": {
+      "type": "string",
+      "enum": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "description": "CASEF test-level classification, not harm severity or a qualification result."
+    },
+    "construct_id": {
+      "$ref": "../common/scalars.schema.json#/$defs/stable_identifier"
+    },
+    "construct_version": {
+      "$ref": "../common/scalars.schema.json#/$defs/authored_version"
+    },
+    "purpose": {
+      "$ref": "#/$defs/non_blank_string"
+    },
+    "prompt_protocol": {
+      "$ref": "#/$defs/prompt_protocol"
+    },
+    "expected_output_contract": {
+      "$ref": "#/$defs/expected_output_contract"
+    },
+    "acceptance_criteria": {
+      "$ref": "#/$defs/acceptance_criteria"
+    },
+    "deterministic_assessment_requirements": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/deterministic_assessment_requirement"
+      },
+      "uniqueItems": true,
+      "description": "SET_LIKE_COLLECTION keyed by requirement_id. The collection may be empty only when deterministic assessment is not required; semantic identity uniqueness requires content-aware validation."
+    },
+    "human_assessment_requirements": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/human_assessment_requirement"
+      },
+      "uniqueItems": true,
+      "description": "SET_LIKE_COLLECTION keyed by requirement_id. The collection may be empty only when human assessment is not required; semantic identity uniqueness requires content-aware validation."
+    },
+    "execution_eligibility": {
+      "type": "string",
+      "enum": [
+        "ELIGIBLE",
+        "NOT_ELIGIBLE"
+      ],
+      "description": "Test execution eligibility only; it is not evidence eligibility, qualification, or permission."
+    },
+    "applicability": {
+      "$ref": "#/$defs/applicability"
+    },
+    "prohibited_interpretations": {
+      "$ref": "#/$defs/non_empty_string_set"
+    },
+    "spec_status": {
+      "type": "string",
+      "enum": [
+        "DRAFT",
+        "FROZEN",
+        "RETIRED"
+      ]
+    },
+    "created_timestamp_utc": {
+      "$ref": "../common/scalars.schema.json#/$defs/canonical_timestamp_utc"
+    },
+    "approved_timestamp_utc": {
+      "$ref": "../common/scalars.schema.json#/$defs/canonical_timestamp_utc"
+    },
+    "approved_by": {
+      "$ref": "#/$defs/approved_by"
+    },
+    "supersedes_test_version": {
+      "$ref": "../common/scalars.schema.json#/$defs/authored_version"
+    },
+    "supersession_reason": {
+      "$ref": "#/$defs/non_blank_string"
+    }
+  },
+  "$defs": {
+    "non_blank_string": {
+      "type": "string",
+      "pattern": "^(?!\\s)[\\s\\S]*\\S(?![\\s\\S])",
+      "not": {
+        "enum": [
+          "NONE",
+          "N/A",
+          "UNKNOWN",
+          "NULL",
+          "NOT_PROVIDED"
+        ]
+      },
+      "description": "Non-empty text with no leading or trailing whitespace. Scientific boundedness remains owned by the field-specific contract and review."
+    },
+    "string_set": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/non_blank_string"
+      },
+      "uniqueItems": true,
+      "description": "SET_LIKE_COLLECTION canonically ordered by exact string value. Semantic equivalence beyond exact string equality requires content-aware validation."
+    },
+    "non_empty_string_set": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/string_set"
+        },
+        {
+          "minItems": 1
+        }
+      ]
+    },
+    "prompt_step": {
+      "type": "object",
+      "required": [
+        "step_id",
+        "sequence_index",
+        "channel_id",
+        "content"
+      ],
+      "properties": {
+        "step_id": {
+          "$ref": "../common/scalars.schema.json#/$defs/stable_identifier"
+        },
+        "sequence_index": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "channel_id": {
+          "$ref": "../common/scalars.schema.json#/$defs/stable_identifier"
+        },
+        "content": {
+          "$ref": "#/$defs/non_blank_string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "prompt_protocol": {
+      "type": "object",
+      "required": [
+        "protocol_id",
+        "protocol_version",
+        "protocol_type",
+        "steps"
+      ],
+      "properties": {
+        "protocol_id": {
+          "$ref": "../common/scalars.schema.json#/$defs/stable_identifier"
+        },
+        "protocol_version": {
+          "$ref": "../common/scalars.schema.json#/$defs/authored_version"
+        },
+        "protocol_type": {
+          "type": "string",
+          "enum": [
+            "SINGLE_PROMPT",
+            "ORDERED_MULTI_TURN",
+            "FIXED_AB_PAIR",
+            "CLOSED_VARIANT_SET"
+          ]
+        },
+        "steps": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/prompt_step"
+          },
+          "description": "ORDERED_SEQUENCE. Array order and sequence_index are preserved; semantic uniqueness and index continuity require content-aware validation."
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "protocol_type": {
+                "const": "SINGLE_PROMPT"
+              }
+            },
+            "required": [
+              "protocol_type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "steps": {
+                "maxItems": 1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "protocol_type": {
+                "const": "ORDERED_MULTI_TURN"
+              }
+            },
+            "required": [
+              "protocol_type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "steps": {
+                "minItems": 2
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "protocol_type": {
+                "const": "FIXED_AB_PAIR"
+              }
+            },
+            "required": [
+              "protocol_type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "steps": {
+                "minItems": 2,
+                "maxItems": 2
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "protocol_type": {
+                "const": "CLOSED_VARIANT_SET"
+              }
+            },
+            "required": [
+              "protocol_type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "steps": {
+                "minItems": 2
+              }
+            }
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "output_constraint": {
+      "type": "object",
+      "required": [
+        "constraint_id",
+        "bounded_statement"
+      ],
+      "properties": {
+        "constraint_id": {
+          "$ref": "../common/scalars.schema.json#/$defs/stable_identifier"
+        },
+        "bounded_statement": {
+          "$ref": "#/$defs/non_blank_string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "expected_output_contract": {
+      "type": "object",
+      "required": [
+        "contract_id",
+        "contract_version",
+        "bounded_description",
+        "constraints"
+      ],
+      "properties": {
+        "contract_id": {
+          "$ref": "../common/scalars.schema.json#/$defs/stable_identifier"
+        },
+        "contract_version": {
+          "$ref": "../common/scalars.schema.json#/$defs/authored_version"
+        },
+        "bounded_description": {
+          "$ref": "#/$defs/non_blank_string"
+        },
+        "constraints": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/output_constraint"
+          },
+          "uniqueItems": true,
+          "description": "SET_LIKE_COLLECTION keyed by constraint_id. Semantic identity uniqueness requires content-aware validation."
+        }
+      },
+      "additionalProperties": false
+    },
+    "acceptance_criterion": {
+      "type": "object",
+      "required": [
+        "criterion_id",
+        "bounded_statement",
+        "assessment_method"
+      ],
+      "properties": {
+        "criterion_id": {
+          "$ref": "../common/scalars.schema.json#/$defs/stable_identifier"
+        },
+        "bounded_statement": {
+          "$ref": "#/$defs/non_blank_string"
+        },
+        "assessment_method": {
+          "type": "string",
+          "enum": [
+            "DETERMINISTIC",
+            "HUMAN",
+            "BOTH"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "acceptance_criteria": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/acceptance_criterion"
+      },
+      "uniqueItems": true,
+      "description": "SET_LIKE_COLLECTION keyed by criterion_id. Semantic identity uniqueness requires content-aware validation."
+    },
+    "validator_reference": {
+      "allOf": [
+        {
+          "$ref": "../common/references.schema.json#/$defs/versioned_contract_reference_base"
+        },
+        {
+          "type": "object",
+          "required": [
+            "validator_id",
+            "validator_version"
+          ],
+          "properties": {
+            "validator_id": {
+              "$ref": "../common/scalars.schema.json#/$defs/stable_identifier"
+            },
+            "validator_version": {
+              "$ref": "../common/scalars.schema.json#/$defs/authored_version"
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "deterministic_assessment_requirement": {
+      "type": "object",
+      "required": [
+        "requirement_id",
+        "criterion_ids",
+        "validator_reference"
+      ],
+      "properties": {
+        "requirement_id": {
+          "$ref": "../common/scalars.schema.json#/$defs/stable_identifier"
+        },
+        "criterion_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "../common/scalars.schema.json#/$defs/stable_identifier"
+          },
+          "uniqueItems": true,
+          "description": "SET_LIKE_COLLECTION canonically ordered by criterion_id."
+        },
+        "validator_reference": {
+          "$ref": "#/$defs/validator_reference"
+        }
+      },
+      "additionalProperties": false
+    },
+    "rater_protocol_reference": {
+      "allOf": [
+        {
+          "$ref": "../common/references.schema.json#/$defs/versioned_contract_reference_base"
+        },
+        {
+          "type": "object",
+          "required": [
+            "rater_protocol_id",
+            "rater_protocol_version"
+          ],
+          "properties": {
+            "rater_protocol_id": {
+              "$ref": "../common/scalars.schema.json#/$defs/stable_identifier"
+            },
+            "rater_protocol_version": {
+              "$ref": "../common/scalars.schema.json#/$defs/authored_version"
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "human_assessment_requirement": {
+      "type": "object",
+      "required": [
+        "requirement_id",
+        "criterion_ids",
+        "rater_protocol_reference"
+      ],
+      "properties": {
+        "requirement_id": {
+          "$ref": "../common/scalars.schema.json#/$defs/stable_identifier"
+        },
+        "criterion_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "../common/scalars.schema.json#/$defs/stable_identifier"
+          },
+          "uniqueItems": true,
+          "description": "SET_LIKE_COLLECTION canonically ordered by criterion_id."
+        },
+        "rater_protocol_reference": {
+          "$ref": "#/$defs/rater_protocol_reference"
+        }
+      },
+      "additionalProperties": false
+    },
+    "applicability": {
+      "type": "object",
+      "required": [
+        "in_scope_conditions",
+        "out_of_scope_conditions",
+        "assumptions"
+      ],
+      "properties": {
+        "in_scope_conditions": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/non_empty_string_set"
+            }
+          ],
+          "description": "SET_LIKE_COLLECTION canonically ordered by exact string value."
+        },
+        "out_of_scope_conditions": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/non_empty_string_set"
+            }
+          ],
+          "description": "SET_LIKE_COLLECTION canonically ordered by exact string value."
+        },
+        "assumptions": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/string_set"
+            }
+          ],
+          "description": "Required SET_LIKE_COLLECTION canonically ordered by exact string value; it may be empty."
+        }
+      },
+      "additionalProperties": false
+    },
+    "approved_by": {
+      "allOf": [
+        {
+          "$ref": "../common/actors.schema.json#/$defs/human_actor_identity_base"
+        }
+      ],
+      "unevaluatedProperties": false,
+      "description": "Exact human approving actor identity. Identity structure alone does not establish authority."
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "spec_status": {
+            "const": "DRAFT"
+          }
+        },
+        "required": [
+          "spec_status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "execution_eligibility": {
+            "const": "NOT_ELIGIBLE"
+          }
+        },
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "approved_timestamp_utc"
+              ]
+            },
+            {
+              "required": [
+                "approved_by"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "spec_status": {
+            "enum": [
+              "FROZEN",
+              "RETIRED"
+            ]
+          }
+        },
+        "required": [
+          "spec_status"
+        ]
+      },
+      "then": {
+        "required": [
+          "prompt_protocol",
+          "expected_output_contract",
+          "acceptance_criteria",
+          "approved_timestamp_utc",
+          "approved_by"
+        ],
+        "anyOf": [
+          {
+            "properties": {
+              "deterministic_assessment_requirements": {
+                "minItems": 1
+              }
+            }
+          },
+          {
+            "properties": {
+              "human_assessment_requirements": {
+                "minItems": 1
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "spec_status": {
+            "const": "RETIRED"
+          }
+        },
+        "required": [
+          "spec_status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "execution_eligibility": {
+            "const": "NOT_ELIGIBLE"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "execution_eligibility": {
+            "const": "ELIGIBLE"
+          }
+        },
+        "required": [
+          "execution_eligibility"
+        ]
+      },
+      "then": {
+        "properties": {
+          "spec_status": {
+            "const": "FROZEN"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "execution_eligibility": {
+            "const": "ELIGIBLE"
+          },
+          "acceptance_criteria": {
+            "contains": {
+              "properties": {
+                "assessment_method": {
+                  "enum": [
+                    "DETERMINISTIC",
+                    "BOTH"
+                  ]
+                }
+              },
+              "required": [
+                "assessment_method"
+              ]
+            }
+          }
+        },
+        "required": [
+          "execution_eligibility",
+          "acceptance_criteria"
+        ]
+      },
+      "then": {
+        "properties": {
+          "deterministic_assessment_requirements": {
+            "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "execution_eligibility": {
+            "const": "ELIGIBLE"
+          },
+          "acceptance_criteria": {
+            "contains": {
+              "properties": {
+                "assessment_method": {
+                  "enum": [
+                    "HUMAN",
+                    "BOTH"
+                  ]
+                }
+              },
+              "required": [
+                "assessment_method"
+              ]
+            }
+          }
+        },
+        "required": [
+          "execution_eligibility",
+          "acceptance_criteria"
+        ]
+      },
+      "then": {
+        "properties": {
+          "human_assessment_requirements": {
+            "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "supersedes_test_version"
+        ]
+      },
+      "then": {
+        "required": [
+          "supersession_reason"
+        ]
+      },
+      "else": {
+        "not": {
+          "required": [
+            "supersession_reason"
+          ]
+        }
+      }
+    }
+  ],
+  "unevaluatedProperties": false
+}

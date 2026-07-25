@@ -16,7 +16,7 @@ Authority is ordered as follows:
 
 When serialization and record semantics interact, record ownership remains with the record-specific contract. This document controls only the machine representation of that meaning.
 
-This is a documentation-level contract only. No executable JSON Schema currently exists.
+This document remains a documentation-level authority. Development-stage executable JSON Schemas now exist as subordinate implementations; their structural success does not expand this contract's authority.
 
 ## 2. Canonical data format and encoding
 
@@ -26,9 +26,9 @@ YAML, TOML, CSV, Markdown, and database rows are not canonical record encodings.
 
 Canonical evidence references bind the resulting canonical JSON or exact source-artifact bytes, not an untracked equivalent representation.
 
-## 3. Future JSON Schema dialect and identity
+## 3. JSON Schema dialect and identity
 
-Future CASEF executable schemas use JSON Schema Draft 2020-12. Every future root schema must contain `$schema`, `$id`, `title`, and `type`. The `$schema` value is `https://json-schema.org/draft/2020-12/schema`.
+CASEF executable schemas use JSON Schema Draft 2020-12. Every root schema must contain `$schema`, `$id`, `title`, and `type`. The `$schema` value is `https://json-schema.org/draft/2020-12/schema`.
 
 The versioned schema-directory convention is:
 
@@ -42,7 +42,7 @@ The versioned schema-directory convention is:
 - `schemas/v0.6.1/context_of_use/`
 - `schemas/v0.6.1/qualification_record/`
 
-The `schemas/v0.6.1/common/` directory now contains the first development-stage executable common scalar and hash schemas. Record-specific schema directories remain unimplemented. The common schemas use their future immutable release-tag `$id` values but are not represented as released until the immutable `v0.6.1` Git tag exists.
+The `schemas/v0.6.1/common/` directory contains development-stage executable scalar, hash, reference-base, repository-provenance, and actor-identity schemas. The `schemas/v0.6.1/test_spec/` directory contains the first complete canonical-record schema. The remaining record-specific schema directories remain unimplemented. These schemas use their future immutable release-tag `$id` values but are not represented as released until the immutable `v0.6.1` Git tag exists.
 
 Future released `$id` values use immutable release-tag paths in this form:
 
@@ -343,8 +343,10 @@ They may serve only according to their current canonical status as historical ma
 
 ## 21. Current implementation boundary
 
-All six canonical record contracts and the canonical serialization decisions are documented. Development-stage common scalar, hash, reference-base, repository-provenance, and actor-identity JSON Schemas and their machine-readable valid and invalid test vectors now exist.
+All six canonical record contracts and the canonical serialization decisions are documented. Development-stage common scalar, hash, reference-base, repository-provenance, and actor-identity JSON Schemas and their machine-readable valid and invalid test vectors exist. The first complete canonical-record schema, `test_spec`, and its structural vectors also exist.
 
-No canonical record schema or complete owner-specific reference schema exists. No schema catalog, canonical serializer, RFC 8785 implementation, SHA-256 computation or verification implementation, executable cross-record validator, CI workflow, serialized canonical record instance, or canonical evidence-generation workflow exists.
+A committed local development harness dynamically validates the versioned schema tree and vectors through an explicit no-network registry. A minimal GitHub Actions workflow runs that harness and its unit tests.
+
+No schema catalog, canonical serializer, RFC 8785 implementation, SHA-256 computation or verification implementation, executable cross-record validator, serialized canonical record instance, or canonical evidence-generation workflow exists. The other five canonical record schemas remain unimplemented.
 
 No approved rater-protocol or gate-policy instance exists, and no canonical qualification pipeline is executable.
