@@ -1,0 +1,50 @@
+name: Diagnostic Capture Spike
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  diagnostic-capture-spike:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Verify frozen inputs are unchanged
+        run: |
+          git diff --exit-code 75a580d8057b483fa76cedcc2e773e2144016a96 -- \
+            experiments/diagnostic_capture_spike/PROTOCOL.md \
+            experiments/diagnostic_capture_spike/README.md \
+            experiments/diagnostic_capture_spike/fixtures
+      - name: Run unit tests
+        run: python -m unittest discover -s experiments/diagnostic_capture_spike/tests -p "test_capture_spike.py"
+      - name: Export and execute frozen input
+        run: |
+          FROZEN_ROOT="$(mktemp -d)"
+          OUTPUT_ROOT="$(mktemp -d)"
+          git -c core.autocrlf=false archive 75a580d8057b483fa76cedcc2e773e2144016a96 \
+            experiments/diagnostic_capture_spike/PROTOCOL.md \
+            experiments/diagnostic_capture_spike/fixtures | tar -x -C "$FROZEN_ROOT"
+          python experiments/diagnostic_capture_spike/run_capture_spike.py \
+            --source-root "$FROZEN_ROOT" \
+            --manifest "$FROZEN_ROOT/experiments/diagnostic_capture_spike/fixtures/manifest.json" \
+            --frozen-input-commit 75a580d8057b483fa76cedcc2e773e2144016a96 \
+            --implementation-commit "$(git rev-list --reverse 75a580d8057b483fa76cedcc2e773e2144016a96..HEAD | head -n 1)" \
+            --output-directory "$OUTPUT_ROOT/results"
+          cmp "$OUTPUT_ROOT/results/diagnostic_receipts.jsonl" experiments/diagnostic_capture_spike/results/diagnostic_receipts.jsonl
+          OUTPUT_SUMMARY="$OUTPUT_ROOT/results/run_summary.json" python - <<'PY'
+          import json
+          import os
+          summary = json.load(open(os.environ["OUTPUT_SUMMARY"], encoding="utf-8"))
+          assert summary["source_verified_count"] == 11
+          assert summary["utf8_decode_success_count"] == 9
+          assert summary["utf8_decode_failure_count"] == 2
+          assert summary["derivative_artifact_count"] == 0
+          PY
