@@ -1,0 +1,24 @@
+{
+  "summary_type": "NON_CANONICAL_DIAGNOSTIC_RUN_SUMMARY",
+  "frozen_input_commit": "75a580d8057b483fa76cedcc2e773e2144016a96",
+  "implementation_commit": "f7f07ae79693cfcc49072f31a29b5ccf1ffe6df7",
+  "execution_status": "COMPLETED",
+  "experiment_invalidated": false,
+  "fixture_count_expected": 11,
+  "fixture_count_processed": 11,
+  "source_verified_count": 11,
+  "source_mismatch_count": 0,
+  "capture_failure_count": 0,
+  "utf8_decode_success_count": 9,
+  "utf8_decode_failure_count": 2,
+  "derivative_artifact_count": 0,
+  "receipt_output_path": "diagnostic_receipts.jsonl",
+  "receipt_sha256": "1eb3fde83298955e926242943ec7bc6921139c3b1597c53a65f5fb3666b0bf8f",
+  "python_version": "3.14.6",
+  "platform_system": "Windows",
+  "limitations": [
+    "Non-canonical bounded diagnostic experiment only.",
+    "No derivative byte artifacts are generated.",
+    "No evidence eligibility, qualification, safety, or clinical conclusion is asserted."
+  ]
+}
