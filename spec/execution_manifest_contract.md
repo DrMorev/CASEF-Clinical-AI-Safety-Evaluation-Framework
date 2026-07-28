@@ -47,7 +47,7 @@ Planned facts remain distinct from the observed facts later owned by `run_record
 | `suite_version` | Required | Human-approved suite version owned by the manifest and bound to the exact `selected_test_references` |
 | `execution_class` | Required | Exactly `QUALIFICATION_CANDIDATE` or `PLANNED_DIAGNOSTIC` |
 | `context_of_use_reference` | Required for `QUALIFICATION_CANDIDATE` | Exact immutable Context-of-Use ID, version, reference, and hash; optional for `PLANNED_DIAGNOSTIC` only when no qualification claim is made |
-| `selected_test_references` | Required, non-empty collection | Exact canonical `test_id`, `test_version`, specification reference, and specification hash for every selected test |
+| `selected_test_references` | Required, non-empty collection | Exact canonical test identity serialized as `record_id`, owner-specific `test_version`, specification reference, and specification hash for every selected test; `record_id` carries the canonical `test_id` |
 | `planned_target` | Required | One requested target identity, preserving null where an identity element is not exposed rather than inferring it |
 | `planned_interface` | Required | Exact planned interface or operating surface, distinct from later observed interface facts |
 | `planned_execution_conditions` | Required | Controlled and declared conditions necessary to interpret the planned execution |
@@ -56,27 +56,126 @@ Planned facts remain distinct from the observed facts later owned by `run_record
 | `planned_session_conditions` | Required | Planned conversation, memory, and session-state conditions relevant to execution |
 | `planned_run_slots` | Required, non-empty collection | Immutable planned repetitions, each with one unique `run_slot_id` and one exact selected test reference |
 | `capture_requirements` | Required | Required source-artifact and provenance capture for each planned slot; does not contain captured evidence |
-| `validation_requirements` | Required collection | Planned deterministic validation required by selected test specs; references rather than redefines validator semantics |
-| `rater_requirements` | Required collection | Planned human assessment required by selected test specs and exact protocols; references rather than redefines rater semantics |
+| `validation_requirements` | Required collection | Planned deterministic validation required by selected test specs; binds exact upstream test requirement IDs to slots without copying validator references or semantics |
+| `rater_requirements` | Required collection | Planned human assessment required by selected test specs; binds exact upstream test requirement IDs to slots without copying rater-protocol references, rater counts, or semantics |
 | `manifest_status` | Required | Exactly `DRAFT`, `AUTHORIZED`, `SUPERSEDED`, or `CANCELLED` |
 | `prepared_by` | Required | Identity and role of the person or tooling that prepared the manifest; preparation is not execution or qualification authorization |
-| `authorized_by` | Required for `AUTHORIZED` and any later lifecycle version of an authorized plan | Identity and role of the human authority approving the exact execution plan; null or absent only when the plan was never authorized |
+| `authorized_by` | Required for `AUTHORIZED`; conditional for `SUPERSEDED` or `CANCELLED` | Identity and role of the human authority approving the exact execution plan; absent for `DRAFT`; for a terminal lifecycle version, present together with `authorized_timestamp_utc` when the predecessor lineage was authorized and otherwise absent; null is prohibited |
 | `prepared_timestamp_utc` | Required | Canonical UTC timestamp at which this manifest version was prepared |
-| `authorized_timestamp_utc` | Required for `AUTHORIZED` and any later lifecycle version of an authorized plan | Canonical UTC timestamp of execution-plan authorization; null or absent only when the plan was never authorized |
-| `supersedes_manifest_version` | Optional | Earlier version of the same `manifest_id` replaced by this version; null or absent when none exists |
-| `supersession_reason` | Conditionally required | Bounded reason for supersession; required when `supersedes_manifest_version` is present and otherwise null or absent |
+| `authorized_timestamp_utc` | Required for `AUTHORIZED`; conditional for `SUPERSEDED` or `CANCELLED` | Canonical UTC timestamp of execution-plan authorization; absent for `DRAFT`; for a terminal lifecycle version, present together with `authorized_by` when the predecessor lineage was authorized and otherwise absent; null is prohibited |
+| `supersedes_manifest_version` | Optional, and required for `SUPERSEDED` or `CANCELLED` | Earlier version of the same `manifest_id` replaced by this additive lifecycle version; absent when none exists; null is prohibited |
+| `supersession_reason` | Conditionally required | Bounded reason for supersession; present if and only if `supersedes_manifest_version` is present; otherwise absent; null is prohibited |
 
-The future executable schema must define serialization, timestamp syntax, and controlled subfields. String sentinels such as `"NONE"`, `"N/A"`, or `"UNKNOWN"` must not substitute for null or field absence.
+Canonical manifest serialization uses field absence for inapplicable optional authorization and supersession states. Null is permitted only for the required planned-target identity elements where it has the explicit meaning defined below. String sentinels such as `"NONE"`, `"N/A"`, `"UNKNOWN"`, `"NULL"`, or `"NOT_PROVIDED"` must not substitute for null or field absence.
 
-## 4. Selected-test binding
+## 4. Executable nested structures
 
-Every selection binds one exact canonical test version through `test_id`, `test_version`, a content reference, and a content hash. A selected test must be `FROZEN` and `ELIGIBLE` under `spec/test_spec_contract.md` when the manifest is authorized.
+The development-stage executable schema freezes the following nested field structures. Every completed nested object is closed against undeclared fields.
+
+### 4.1 References
+
+`context_of_use_reference` composes the common versioned-contract reference base with:
+
+- required `context_id`;
+- required `context_version`;
+- required `contract_reference`; and
+- required `contract_hash`.
+
+Context of Use is a referenced non-record contract input. It must not be typed as a canonical-record reference.
+
+Each `selected_test_references` item composes the common record-reference base with:
+
+- `record_type`, fixed to `test_spec`;
+- required `record_id`, which carries the canonical `test_id`;
+- required `test_version`;
+- required `record_reference`; and
+- required `record_hash`.
+
+No duplicate `test_id` or `record_version` field is added. The collection is non-empty and set-like, keyed content-aware by `(record_id, test_version)`.
+
+### 4.2 Planned target and interface
+
+`planned_target` is a required object with all four fields:
+
+- `provider_id`;
+- `product_id`;
+- `model_id`; and
+- `model_alias`.
+
+The first three fields are stable identifiers or null. `model_alias` is a non-blank string or null. At least one field must be non-null. Null is meaningful only when that identity element is not exposed or cannot be selected without inference.
+
+`planned_interface` contains required stable identifiers `interface_id` and `interface_type_id`. Optional `interface_version` is a non-blank string and is absent when inapplicable. `interface_type_id` is owner-bound; this contract creates no universal platform taxonomy.
+
+### 4.3 Planned conditions
+
+`planned_execution_conditions` is a required set-like collection that may be empty. Each item contains required `condition_id` and `planned_value`.
+
+`planned_generation_settings` contains:
+
+- required `settings_state`, exactly `DECLARED`, `NOT_APPLICABLE`, or `NOT_EXPOSED`; and
+- required set-like `settings`.
+
+Each setting contains `setting_id` and `planned_value`. `DECLARED` requires at least one setting; the other states require an empty collection.
+
+`planned_tool_conditions` contains:
+
+- required `tool_mode`, exactly `NO_TOOLS` or `DECLARED_TOOLS`; and
+- required set-like `tools`.
+
+Each tool contains required `tool_id`, required `availability` of `ENABLED` or `DISABLED`, required set-like `permission_ids` that may be empty, and optional `tool_version`. `NO_TOOLS` requires an empty collection; `DECLARED_TOOLS` requires at least one tool.
+
+`planned_session_conditions` contains:
+
+- required `session_mode`, exactly `NEW_SESSION` or `CONTINUING_SESSION`;
+- required `memory_mode`, exactly `DISABLED`, `ENABLED`, or `PLATFORM_MANAGED`;
+- required `preexisting_context`, exactly `PROHIBITED`, `PERMITTED`, or `REQUIRED`; and
+- required set-like `conditions`, which may be empty.
+
+Every condition or setting `planned_value` is one non-null JSON string, number, or boolean. Semantic identity uniqueness is content-aware and uses `condition_id`, `setting_id`, or `tool_id` as applicable.
+
+### 4.4 Planned slots
+
+Each `planned_run_slots` item contains:
+
+- required `run_slot_id`;
+- required `test_record_id`;
+- required `test_version`; and
+- required positive-integer `repetition_index`.
+
+The collection is non-empty and set-like, keyed content-aware by `run_slot_id`. The slot does not duplicate `manifest_id` or `manifest_version`; containment in the immutable manifest provides that binding.
+
+### 4.5 Planned downstream requirements
+
+`capture_requirements` is a required set-like collection. Each item contains:
+
+- required `capture_requirement_id`;
+- required non-empty set-like `run_slot_ids`;
+- required non-empty set-like `artifact_roles`, using only `PROMPT_SOURCE`, `OUTPUT_SOURCE`, or `TRACE_SOURCE`; and
+- required non-empty set-like `provenance_requirements`.
+
+Each provenance requirement contains `requirement_id` and a bounded statement. These requirements do not list JSON field names or contain captured artifacts.
+
+Each `validation_requirements` item contains only:
+
+- required `requirement_id`;
+- required `test_requirement_id`; and
+- required non-empty set-like `run_slot_ids`.
+
+Each `rater_requirements` item contains the same three fields. These structures bind upstream test requirement IDs to planned slots. They do not copy test identity, validator references or logic, rater-protocol references, assessment counts, criterion text, or expected results. The selected `test_spec` remains authoritative for validator and protocol references; the rater protocol remains authoritative for required-rater count.
+
+### 4.6 Actors
+
+`prepared_by` is a closed composition of the common actor-identity base and permits either `HUMAN` or `TOOL`. `authorized_by` is a closed composition of the common human-actor identity base and requires `actor_kind: HUMAN`. Neither structure creates a universal role enum or proves actual authority.
+
+## 5. Selected-test binding
+
+Every selection binds one exact canonical test version through `record_id` carrying the canonical `test_id`, owner-specific `test_version`, a content reference, and a content hash. A selected test must be `FROZEN` and `ELIGIBLE` under `spec/test_spec_contract.md` when the manifest is authorized.
 
 The manifest does not copy or redefine the construct, prompt protocol, output contract, acceptance criteria, or assessment semantics. Fixed A/B, ordered multi-turn, and closed variant-set protocols remain one selected test version and one planned repetition; their internal steps do not become separate test identities.
 
 `suite_version` and the exact selection set remain bound in the same manifest. A suite label or filename does not establish composition without those exact references.
 
-## 5. Execution classes
+## 6. Execution classes
 
 The manifest `execution_class` vocabulary is exactly:
 
@@ -89,7 +188,7 @@ The manifest `execution_class` vocabulary is exactly:
 
 A `PLANNED_DIAGNOSTIC` execution cannot be retroactively promoted into qualification evidence by later assigning a different class, manifest, or Context of Use.
 
-## 6. Manifest status and authorization
+## 7. Manifest status and authorization
 
 The `manifest_status` vocabulary is exactly:
 
@@ -100,13 +199,15 @@ The `manifest_status` vocabulary is exactly:
 | `SUPERSEDED` | Preserved version replaced through an explicit additive supersession relation | No |
 | `CANCELLED` | Preserved plan withdrawn from new execution | No |
 
-Only an exact immutable `AUTHORIZED` manifest version may support planned `QUALIFICATION_CANDIDATE` execution. Authorization freezes all owned planning facts, including target, interface, conditions, selections, requirements, and slots. A change to any of them requires an explicit new manifest version or manifest identity, as applicable.
+Only an exact immutable `AUTHORIZED` manifest version may support planned `QUALIFICATION_CANDIDATE` execution. Authorization freezes all owned planning facts, including target, interface, conditions, selections, requirements, and slots. A change to any of them requires an explicit new manifest version or manifest identity, as applicable. An `AUTHORIZED` version requires both authorization fields and at least one capture requirement.
 
-Supersession or cancellation must preserve the previously authorized version and any attempts already bound to it. A lifecycle change after authorization is recorded additively; it must not silently rewrite an immutable version.
+Supersession or cancellation is represented by a new additive manifest version and must preserve the predecessor and any attempts already bound to it. `SUPERSEDED` and `CANCELLED` require `supersedes_manifest_version` and `supersession_reason`. Their authorization fields are either both present or both absent. When the predecessor lineage was authorized, its authorization provenance remains present and unchanged; when a never-authorized draft lineage is cancelled or superseded, those fields remain absent. Cross-record validation establishes the predecessor state, same-lineage relation, provenance preservation, and immutability of planning facts.
+
+A never-authorized plan may receive a canonical `CANCELLED` lifecycle version. The additive lifecycle version does not authorize execution and does not rewrite an earlier immutable version.
 
 Manifest authorization approves an execution plan only. It is not authorization of a finding, severity, qualification outcome, or policy consequence.
 
-## 7. Planned execution slots
+## 8. Planned execution slots
 
 Every planned repetition has one immutable `run_slot_id` that is unique across canonical manifests. Each slot binds:
 
@@ -120,13 +221,13 @@ If a precondition fails before an execution attempt begins, no `run_record` is c
 
 This contract does not define retry control flow, allocation storage, or runner behavior.
 
-## 8. Context-of-Use binding
+## 9. Context-of-Use binding
 
 Every `QUALIFICATION_CANDIDATE` manifest requires one exact immutable `context_of_use_reference` governed by `spec/context_of_use.md`. The planned target, interface, conditions, and selected tests must be interpretable within that bounded Context of Use.
 
 A `PLANNED_DIAGNOSTIC` manifest may omit the Context-of-Use reference only when no qualification claim is made. Assigning a Context of Use later does not retroactively make diagnostic execution canonical qualification evidence.
 
-## 9. Planned requirements and downstream facts
+## 10. Planned requirements and downstream facts
 
 `capture_requirements`, `validation_requirements`, and `rater_requirements` state what must later be produced or performed. They reference the exact selected test contracts and applicable protocols without copying their semantics.
 
@@ -134,6 +235,16 @@ An absent required run, capture, validation, or rating remains an unresolved dow
 
 The manifest must never contain observed execution timestamps, captured artifact content, conformance results, deterministic or human findings, severity, qualification outcome, or policy consequence.
 
-## 10. Current v0.6.1 implementation status
+## 11. Structural and content-aware validation boundary
 
-This document defines a contract only. It creates no JSON Schema, manifest instance, runner, retry policy, validator, rater protocol, evidence, or qualification capability.
+The executable schema enforces object shape and closure, enums, lexical references and hashes, requiredness, null-versus-absence rules, lifecycle and execution-class conditionals, basic collection cardinality, and actor kind.
+
+Content-aware validation remains responsible for referent existence, content-hash agreement, selected-test `FROZEN` and `ELIGIBLE` state, suite composition, slot-to-test agreement, semantic identity uniqueness, full capture and assessment coverage, Context-of-Use compatibility, actual authorization authority, timestamp ordering, predecessor lineage, immutable-plan preservation, diagnostic non-promotion, and prevention of slot reuse across attempts.
+
+Structural schema success does not establish any content-aware fact, execution success, evidence eligibility, qualification, or use permission.
+
+## 12. Current v0.6.1 implementation status
+
+The development-stage executable [`execution_manifest` schema](../schemas/v0.6.1/execution_manifest/execution_manifest.schema.json) and machine-readable structural vectors now exist. The vectors are not canonical manifest instances or execution authorization.
+
+No canonical manifest instance, runner, retry policy, cross-record validator, rater protocol execution, model or API execution, captured artifact, evidence, gate execution, or qualification capability is created.
