@@ -343,10 +343,10 @@ They may serve only according to their current canonical status as historical ma
 
 ## 21. Current implementation boundary
 
-All six canonical record contracts and the canonical serialization decisions are documented. Development-stage common scalar, hash, reference-base, repository-provenance, and actor-identity JSON Schemas and their machine-readable valid and invalid test vectors exist. The first complete canonical-record schema, `test_spec`, and its structural vectors also exist.
+All six canonical record contracts and the canonical serialization decisions are documented. Development-stage common scalar, hash, reference-base, repository-provenance, and actor-identity JSON Schemas and their machine-readable valid and invalid test vectors exist. Two complete canonical-record schemas, `test_spec` and `execution_manifest`, and their structural vectors also exist.
 
 A committed local development harness dynamically validates the versioned schema tree and vectors through an explicit no-network registry. A minimal GitHub Actions workflow runs that harness and its unit tests.
 
-No schema catalog, canonical serializer, RFC 8785 implementation, SHA-256 computation or verification implementation, executable cross-record validator, serialized canonical record instance, or canonical evidence-generation workflow exists. The other five canonical record schemas remain unimplemented.
+No schema catalog, canonical serializer, RFC 8785 implementation, SHA-256 computation or verification implementation, executable cross-record validator, serialized canonical record instance, or canonical evidence-generation workflow exists. The other four canonical record schemas remain unimplemented.
 
 No approved rater-protocol or gate-policy instance exists, and no canonical qualification pipeline is executable.

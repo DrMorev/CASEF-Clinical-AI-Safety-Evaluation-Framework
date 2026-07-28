@@ -1,0 +1,845 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/sergey-morev/CASEF-Clinical-AI-Safety-Evaluation-Framework/v0.6.1/schemas/v0.6.1/execution_manifest/execution_manifest.schema.json",
+  "title": "CASEF v0.6.1 canonical execution manifest",
+  "description": "Complete executable structural schema for one canonical CASEF execution_manifest record.",
+  "$comment": "Development artifact: not represented as released until the immutable v0.6.1 Git tag exists. Structural validation does not establish authorization validity, referent existence, evidence eligibility, execution success, qualification, or use permission.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "manifest_id",
+    "manifest_version",
+    "suite_id",
+    "suite_version",
+    "execution_class",
+    "selected_test_references",
+    "planned_target",
+    "planned_interface",
+    "planned_execution_conditions",
+    "planned_generation_settings",
+    "planned_tool_conditions",
+    "planned_session_conditions",
+    "planned_run_slots",
+    "capture_requirements",
+    "validation_requirements",
+    "rater_requirements",
+    "manifest_status",
+    "prepared_by",
+    "prepared_timestamp_utc"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "v0.6.1"
+    },
+    "manifest_id": {
+      "$ref": "../common/scalars.schema.json#/$defs/stable_identifier"
+    },
+    "manifest_version": {
+      "$ref": "../common/scalars.schema.json#/$defs/authored_version"
+    },
+    "suite_id": {
+      "$ref": "../common/scalars.schema.json#/$defs/stable_identifier"
+    },
+    "suite_version": {
+      "$ref": "../common/scalars.schema.json#/$defs/authored_version"
+    },
+    "execution_class": {
+      "type": "string",
+      "enum": [
+        "QUALIFICATION_CANDIDATE",
+        "PLANNED_DIAGNOSTIC"
+      ],
+      "description": "Planned execution class only; it does not establish evidence eligibility or qualification."
+    },
+    "context_of_use_reference": {
+      "$ref": "#/$defs/context_of_use_reference"
+    },
+    "selected_test_references": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/selected_test_reference"
+      },
+      "uniqueItems": true,
+      "description": "SET_LIKE_COLLECTION keyed content-aware by (record_id, test_version). Exact-item duplicates are structurally prohibited; semantic identity uniqueness requires content-aware validation."
+    },
+    "planned_target": {
+      "$ref": "#/$defs/planned_target"
+    },
+    "planned_interface": {
+      "$ref": "#/$defs/planned_interface"
+    },
+    "planned_execution_conditions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/condition"
+      },
+      "uniqueItems": true,
+      "description": "Required SET_LIKE_COLLECTION keyed content-aware by condition_id; it may be empty."
+    },
+    "planned_generation_settings": {
+      "$ref": "#/$defs/planned_generation_settings"
+    },
+    "planned_tool_conditions": {
+      "$ref": "#/$defs/planned_tool_conditions"
+    },
+    "planned_session_conditions": {
+      "$ref": "#/$defs/planned_session_conditions"
+    },
+    "planned_run_slots": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/planned_run_slot"
+      },
+      "uniqueItems": true,
+      "description": "SET_LIKE_COLLECTION keyed content-aware by run_slot_id. Global uniqueness, selected-test binding, repetition semantics, and prevention of slot reuse require content-aware validation."
+    },
+    "capture_requirements": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/capture_requirement"
+      },
+      "uniqueItems": true,
+      "description": "SET_LIKE_COLLECTION keyed content-aware by capture_requirement_id. Slot coverage and exact capture completeness require content-aware validation."
+    },
+    "validation_requirements": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/validation_requirement"
+      },
+      "uniqueItems": true,
+      "description": "Required SET_LIKE_COLLECTION keyed content-aware by requirement_id; it may be empty. The selected test specification owns validator references and requirement meaning."
+    },
+    "rater_requirements": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/rater_requirement"
+      },
+      "uniqueItems": true,
+      "description": "Required SET_LIKE_COLLECTION keyed content-aware by requirement_id; it may be empty. The selected test specification owns protocol references, and the exact rater protocol owns required-rater count."
+    },
+    "manifest_status": {
+      "type": "string",
+      "enum": [
+        "DRAFT",
+        "AUTHORIZED",
+        "SUPERSEDED",
+        "CANCELLED"
+      ]
+    },
+    "prepared_by": {
+      "$ref": "#/$defs/prepared_by"
+    },
+    "authorized_by": {
+      "$ref": "#/$defs/authorized_by"
+    },
+    "prepared_timestamp_utc": {
+      "$ref": "../common/scalars.schema.json#/$defs/canonical_timestamp_utc"
+    },
+    "authorized_timestamp_utc": {
+      "$ref": "../common/scalars.schema.json#/$defs/canonical_timestamp_utc"
+    },
+    "supersedes_manifest_version": {
+      "$ref": "../common/scalars.schema.json#/$defs/authored_version"
+    },
+    "supersession_reason": {
+      "$ref": "#/$defs/non_blank_string"
+    }
+  },
+  "$defs": {
+    "non_blank_string": {
+      "type": "string",
+      "pattern": "^(?!\\s)[\\s\\S]*\\S(?![\\s\\S])",
+      "not": {
+        "enum": [
+          "NONE",
+          "N/A",
+          "UNKNOWN",
+          "NULL",
+          "NOT_PROVIDED"
+        ]
+      },
+      "description": "Non-empty text with no leading or trailing whitespace. Boundedness remains owned by the field-specific contract and review."
+    },
+    "planned_value": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/non_blank_string"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "boolean"
+        }
+      ],
+      "description": "One non-null JSON scalar. Empty or sentinel strings do not represent missing values."
+    },
+    "condition": {
+      "type": "object",
+      "required": [
+        "condition_id",
+        "planned_value"
+      ],
+      "properties": {
+        "condition_id": {
+          "$ref": "../common/scalars.schema.json#/$defs/stable_identifier"
+        },
+        "planned_value": {
+          "$ref": "#/$defs/planned_value"
+        }
+      },
+      "additionalProperties": false
+    },
+    "context_of_use_reference": {
+      "allOf": [
+        {
+          "$ref": "../common/references.schema.json#/$defs/versioned_contract_reference_base"
+        },
+        {
+          "type": "object",
+          "required": [
+            "context_id",
+            "context_version"
+          ],
+          "properties": {
+            "context_id": {
+              "$ref": "../common/scalars.schema.json#/$defs/stable_identifier"
+            },
+            "context_version": {
+              "$ref": "../common/scalars.schema.json#/$defs/authored_version"
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false,
+      "description": "Complete Context-of-Use contract reference. Context of Use is a referenced non-record input; shape validity does not establish referent existence, hash agreement, or compatibility."
+    },
+    "selected_test_reference": {
+      "allOf": [
+        {
+          "$ref": "../common/references.schema.json#/$defs/record_reference_base"
+        },
+        {
+          "type": "object",
+          "required": [
+            "test_version"
+          ],
+          "properties": {
+            "record_type": {
+              "const": "test_spec"
+            },
+            "test_version": {
+              "$ref": "../common/scalars.schema.json#/$defs/authored_version"
+            }
+          },
+          "not": {
+            "required": [
+              "record_version"
+            ]
+          }
+        }
+      ],
+      "unevaluatedProperties": false,
+      "description": "Complete selected-test record reference. record_id carries the canonical test_id; test_version is the owner-specific version. record_version is not admitted because test_spec owns test_version."
+    },
+    "planned_target": {
+      "type": "object",
+      "required": [
+        "provider_id",
+        "product_id",
+        "model_id",
+        "model_alias"
+      ],
+      "properties": {
+        "provider_id": {
+          "oneOf": [
+            {
+              "$ref": "../common/scalars.schema.json#/$defs/stable_identifier"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "product_id": {
+          "oneOf": [
+            {
+              "$ref": "../common/scalars.schema.json#/$defs/stable_identifier"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "model_id": {
+          "oneOf": [
+            {
+              "$ref": "../common/scalars.schema.json#/$defs/stable_identifier"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "model_alias": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/non_blank_string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "anyOf": [
+        {
+          "properties": {
+            "provider_id": {
+              "type": "string"
+            }
+          }
+        },
+        {
+          "properties": {
+            "product_id": {
+              "type": "string"
+            }
+          }
+        },
+        {
+          "properties": {
+            "model_id": {
+              "type": "string"
+            }
+          }
+        },
+        {
+          "properties": {
+            "model_alias": {
+              "type": "string"
+            }
+          }
+        }
+      ],
+      "additionalProperties": false,
+      "description": "One planned target identity. Null is meaningful only for a required identity element that is not exposed or cannot be selected without inference; at least one element must be known."
+    },
+    "planned_interface": {
+      "type": "object",
+      "required": [
+        "interface_id",
+        "interface_type_id"
+      ],
+      "properties": {
+        "interface_id": {
+          "$ref": "../common/scalars.schema.json#/$defs/stable_identifier"
+        },
+        "interface_type_id": {
+          "$ref": "../common/scalars.schema.json#/$defs/stable_identifier"
+        },
+        "interface_version": {
+          "$ref": "#/$defs/non_blank_string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Exact planned interface or operating surface. interface_type_id is owner-bound and does not create a global platform taxonomy."
+    },
+    "generation_setting": {
+      "type": "object",
+      "required": [
+        "setting_id",
+        "planned_value"
+      ],
+      "properties": {
+        "setting_id": {
+          "$ref": "../common/scalars.schema.json#/$defs/stable_identifier"
+        },
+        "planned_value": {
+          "$ref": "#/$defs/planned_value"
+        }
+      },
+      "additionalProperties": false
+    },
+    "planned_generation_settings": {
+      "type": "object",
+      "required": [
+        "settings_state",
+        "settings"
+      ],
+      "properties": {
+        "settings_state": {
+          "type": "string",
+          "enum": [
+            "DECLARED",
+            "NOT_APPLICABLE",
+            "NOT_EXPOSED"
+          ]
+        },
+        "settings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/generation_setting"
+          },
+          "uniqueItems": true,
+          "description": "SET_LIKE_COLLECTION keyed content-aware by setting_id."
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "settings_state": {
+                "const": "DECLARED"
+              }
+            },
+            "required": [
+              "settings_state"
+            ]
+          },
+          "then": {
+            "properties": {
+              "settings": {
+                "minItems": 1
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "settings": {
+                "maxItems": 0
+              }
+            }
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "planned_tool": {
+      "type": "object",
+      "required": [
+        "tool_id",
+        "availability",
+        "permission_ids"
+      ],
+      "properties": {
+        "tool_id": {
+          "$ref": "../common/scalars.schema.json#/$defs/stable_identifier"
+        },
+        "availability": {
+          "type": "string",
+          "enum": [
+            "ENABLED",
+            "DISABLED"
+          ]
+        },
+        "permission_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "../common/scalars.schema.json#/$defs/stable_identifier"
+          },
+          "uniqueItems": true,
+          "description": "Required SET_LIKE_COLLECTION keyed by exact permission identifier; it may be empty."
+        },
+        "tool_version": {
+          "$ref": "../common/scalars.schema.json#/$defs/authored_version"
+        }
+      },
+      "additionalProperties": false
+    },
+    "planned_tool_conditions": {
+      "type": "object",
+      "required": [
+        "tool_mode",
+        "tools"
+      ],
+      "properties": {
+        "tool_mode": {
+          "type": "string",
+          "enum": [
+            "NO_TOOLS",
+            "DECLARED_TOOLS"
+          ]
+        },
+        "tools": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/planned_tool"
+          },
+          "uniqueItems": true,
+          "description": "SET_LIKE_COLLECTION keyed content-aware by tool_id."
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "tool_mode": {
+                "const": "NO_TOOLS"
+              }
+            },
+            "required": [
+              "tool_mode"
+            ]
+          },
+          "then": {
+            "properties": {
+              "tools": {
+                "maxItems": 0
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "tools": {
+                "minItems": 1
+              }
+            }
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "planned_session_conditions": {
+      "type": "object",
+      "required": [
+        "session_mode",
+        "memory_mode",
+        "preexisting_context",
+        "conditions"
+      ],
+      "properties": {
+        "session_mode": {
+          "type": "string",
+          "enum": [
+            "NEW_SESSION",
+            "CONTINUING_SESSION"
+          ]
+        },
+        "memory_mode": {
+          "type": "string",
+          "enum": [
+            "DISABLED",
+            "ENABLED",
+            "PLATFORM_MANAGED"
+          ]
+        },
+        "preexisting_context": {
+          "type": "string",
+          "enum": [
+            "PROHIBITED",
+            "PERMITTED",
+            "REQUIRED"
+          ]
+        },
+        "conditions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/condition"
+          },
+          "uniqueItems": true,
+          "description": "Required SET_LIKE_COLLECTION keyed content-aware by condition_id; it may be empty."
+        }
+      },
+      "additionalProperties": false,
+      "description": "Planned conversation, memory, and session-state facts only; validation does not establish that an interface later honored them."
+    },
+    "planned_run_slot": {
+      "type": "object",
+      "required": [
+        "run_slot_id",
+        "test_record_id",
+        "test_version",
+        "repetition_index"
+      ],
+      "properties": {
+        "run_slot_id": {
+          "$ref": "../common/scalars.schema.json#/$defs/stable_identifier"
+        },
+        "test_record_id": {
+          "$ref": "../common/scalars.schema.json#/$defs/stable_identifier"
+        },
+        "test_version": {
+          "$ref": "../common/scalars.schema.json#/$defs/authored_version"
+        },
+        "repetition_index": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "provenance_requirement": {
+      "type": "object",
+      "required": [
+        "requirement_id",
+        "bounded_statement"
+      ],
+      "properties": {
+        "requirement_id": {
+          "$ref": "../common/scalars.schema.json#/$defs/stable_identifier"
+        },
+        "bounded_statement": {
+          "$ref": "#/$defs/non_blank_string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "capture_requirement": {
+      "type": "object",
+      "required": [
+        "capture_requirement_id",
+        "run_slot_ids",
+        "artifact_roles",
+        "provenance_requirements"
+      ],
+      "properties": {
+        "capture_requirement_id": {
+          "$ref": "../common/scalars.schema.json#/$defs/stable_identifier"
+        },
+        "run_slot_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "../common/scalars.schema.json#/$defs/stable_identifier"
+          },
+          "uniqueItems": true,
+          "description": "SET_LIKE_COLLECTION keyed by exact run_slot_id."
+        },
+        "artifact_roles": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "enum": [
+              "PROMPT_SOURCE",
+              "OUTPUT_SOURCE",
+              "TRACE_SOURCE"
+            ]
+          },
+          "uniqueItems": true,
+          "description": "SET_LIKE_COLLECTION of exact manifest-owned source-artifact capture roles."
+        },
+        "provenance_requirements": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/provenance_requirement"
+          },
+          "uniqueItems": true,
+          "description": "SET_LIKE_COLLECTION keyed content-aware by requirement_id. It states bounded provenance obligations rather than copying schema field names."
+        }
+      },
+      "additionalProperties": false
+    },
+    "validation_requirement": {
+      "type": "object",
+      "required": [
+        "requirement_id",
+        "test_requirement_id",
+        "run_slot_ids"
+      ],
+      "properties": {
+        "requirement_id": {
+          "$ref": "../common/scalars.schema.json#/$defs/stable_identifier"
+        },
+        "test_requirement_id": {
+          "$ref": "../common/scalars.schema.json#/$defs/stable_identifier"
+        },
+        "run_slot_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "../common/scalars.schema.json#/$defs/stable_identifier"
+          },
+          "uniqueItems": true,
+          "description": "SET_LIKE_COLLECTION keyed by exact run_slot_id."
+        }
+      },
+      "additionalProperties": false,
+      "description": "Manifest-owned binding from an upstream deterministic test requirement to planned slots. Validator identity and logic remain owned by the exact selected test specification."
+    },
+    "rater_requirement": {
+      "type": "object",
+      "required": [
+        "requirement_id",
+        "test_requirement_id",
+        "run_slot_ids"
+      ],
+      "properties": {
+        "requirement_id": {
+          "$ref": "../common/scalars.schema.json#/$defs/stable_identifier"
+        },
+        "test_requirement_id": {
+          "$ref": "../common/scalars.schema.json#/$defs/stable_identifier"
+        },
+        "run_slot_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "../common/scalars.schema.json#/$defs/stable_identifier"
+          },
+          "uniqueItems": true,
+          "description": "SET_LIKE_COLLECTION keyed by exact run_slot_id."
+        }
+      },
+      "additionalProperties": false,
+      "description": "Manifest-owned binding from an upstream human-assessment test requirement to planned slots. Protocol identity and required-rater count remain owned by the exact selected test and rater protocol."
+    },
+    "prepared_by": {
+      "allOf": [
+        {
+          "$ref": "../common/actors.schema.json#/$defs/actor_identity_base"
+        }
+      ],
+      "unevaluatedProperties": false,
+      "description": "Closed human-or-tool manifest-preparer identity. Identity shape does not establish permission or successful preparation."
+    },
+    "authorized_by": {
+      "allOf": [
+        {
+          "$ref": "../common/actors.schema.json#/$defs/human_actor_identity_base"
+        }
+      ],
+      "unevaluatedProperties": false,
+      "description": "Closed human manifest-authorizer identity. Identity shape does not establish actual authorization authority."
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "execution_class": {
+            "const": "QUALIFICATION_CANDIDATE"
+          }
+        },
+        "required": [
+          "execution_class"
+        ]
+      },
+      "then": {
+        "required": [
+          "context_of_use_reference"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "manifest_status": {
+            "const": "DRAFT"
+          }
+        },
+        "required": [
+          "manifest_status"
+        ]
+      },
+      "then": {
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "authorized_by"
+              ]
+            },
+            {
+              "required": [
+                "authorized_timestamp_utc"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "manifest_status": {
+            "const": "AUTHORIZED"
+          }
+        },
+        "required": [
+          "manifest_status"
+        ]
+      },
+      "then": {
+        "required": [
+          "authorized_by",
+          "authorized_timestamp_utc"
+        ],
+        "properties": {
+          "capture_requirements": {
+            "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "manifest_status": {
+            "enum": [
+              "SUPERSEDED",
+              "CANCELLED"
+            ]
+          }
+        },
+        "required": [
+          "manifest_status"
+        ]
+      },
+      "then": {
+        "required": [
+          "supersedes_manifest_version",
+          "supersession_reason"
+        ],
+        "oneOf": [
+          {
+            "required": [
+              "authorized_by",
+              "authorized_timestamp_utc"
+            ]
+          },
+          {
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "authorized_by"
+                  ]
+                },
+                {
+                  "required": [
+                    "authorized_timestamp_utc"
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "supersedes_manifest_version"
+        ]
+      },
+      "then": {
+        "required": [
+          "supersession_reason"
+        ]
+      },
+      "else": {
+        "not": {
+          "required": [
+            "supersession_reason"
+          ]
+        }
+      }
+    }
+  ],
+  "unevaluatedProperties": false
+}

@@ -122,6 +122,7 @@ CASEF is currently designed as a framework for:
 ### Executable schema foundation
 - [`schemas/v0.6.1/common/`](schemas/v0.6.1/common/) — development-stage Draft 2020-12 common scalar, hash, reference-base, repository-provenance, and actor-identity definitions with machine-readable valid and invalid test vectors
 - [`schemas/v0.6.1/test_spec/`](schemas/v0.6.1/test_spec/) — first complete canonical-record schema, with lifecycle conditionals and machine-readable structural vectors
+- [`schemas/v0.6.1/execution_manifest/`](schemas/v0.6.1/execution_manifest/) — second complete canonical-record schema, with execution-class and lifecycle conditionals plus machine-readable structural vectors
 
 Local schema validation:
 
@@ -151,9 +152,9 @@ The `Schema Validation` GitHub Actions workflow runs the harness and unit tests 
 
 ## Current v0.6.1 implementation boundary
 
-CASEF v0.6.1 currently provides authoritative gate semantics, canonical contract documentation, documented canonical serialization rules, development-stage common schemas, and the first complete canonical-record schema: `test_spec`. A committed development harness and CI workflow validate all schemas and structural vectors.
+CASEF v0.6.1 currently provides authoritative gate semantics, canonical contract documentation, documented canonical serialization rules, development-stage common schemas, and two complete canonical-record schemas: `test_spec` and `execution_manifest`. A committed development harness and CI workflow validate all schemas and structural vectors.
 
-CASEF does not yet provide serialized canonical record instances, the other five canonical record schemas, a canonical serializer, record or artifact hashing, an executable cross-record validator, a runner, an executable canonical qualification pipeline, a canonical evidence-generation workflow, or live qualification capability.
+CASEF does not yet provide serialized canonical record instances, the other four canonical record schemas, a canonical serializer, record or artifact hashing, an executable cross-record validator, a runner, an executable canonical qualification pipeline, a canonical evidence-generation workflow, or live qualification capability.
 
 The contracts define which future records and evidence bindings are required. They do not provide the runner, owner-specific test validators, approved rater-protocol instances, executable human-assessment workflow, review workflow, or PI-approved gate rules still required before canonical evidence can be generated or qualification can be issued.
 
@@ -196,7 +197,7 @@ The v0.6.1 contract foundation currently establishes:
 
 - authoritative qualification and gate semantics in `docs/gates.md`;
 - canonical evidence ownership in `docs/canonical_evidence_contract.md`;
-- executable development-stage common schemas plus the first complete canonical-record schema, `test_spec`, with machine-readable valid and invalid vectors;
+- executable development-stage common schemas plus two complete canonical-record schemas, `test_spec` and `execution_manifest`, with machine-readable valid and invalid vectors;
 - a committed dynamic schema-validation harness, unit tests, and a minimal structural-validation CI workflow;
 - documentation-level contracts for all six canonical record types, including protocol-bound individual human assessment;
 - a documentation-level rater-protocol contract; and
