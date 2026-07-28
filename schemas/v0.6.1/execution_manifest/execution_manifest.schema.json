@@ -162,10 +162,23 @@
       },
       "description": "Non-empty text with no leading or trailing whitespace. Boundedness remains owned by the field-specific contract and review."
     },
+    "exact_planned_string": {
+      "type": "string",
+      "not": {
+        "enum": [
+          "NONE",
+          "N/A",
+          "UNKNOWN",
+          "NULL",
+          "NOT_PROVIDED"
+        ]
+      },
+      "description": "Exact planned string value. Leading whitespace, trailing whitespace, whitespace-only content, and the empty string are preserved as literal values when permitted by the exact setting or condition owner; they must not be interpreted as missing values. Owner-specific semantic validity requires content-aware validation."
+    },
     "planned_value": {
       "oneOf": [
         {
-          "$ref": "#/$defs/non_blank_string"
+          "$ref": "#/$defs/exact_planned_string"
         },
         {
           "type": "number"
@@ -174,7 +187,7 @@
           "type": "boolean"
         }
       ],
-      "description": "One non-null JSON scalar. Empty or sentinel strings do not represent missing values."
+      "description": "One non-null JSON scalar. Exact strings preserve literal whitespace and emptiness; sentinel strings do not represent missing values."
     },
     "condition": {
       "type": "object",
