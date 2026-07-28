@@ -2801,6 +2801,72 @@
             "role_id": "EXECUTION_OPERATOR"
           },
           "prepared_timestamp_utc": "2026-07-28T12:00:00Z"
+        },
+        {
+          "schema_version": "v0.6.1",
+          "manifest_id": "MANIFEST-01",
+          "manifest_version": "v0.1.0-draft",
+          "suite_id": "SUITE-01",
+          "suite_version": "v0.1.0",
+          "execution_class": "PLANNED_DIAGNOSTIC",
+          "selected_test_references": [
+            {
+              "record_type": "test_spec",
+              "record_id": "TC-L1-JSON-01",
+              "test_version": "v0.6.1",
+              "record_reference": "https://example.org/casef/test/TC-L1-JSON-01/v0.6.1",
+              "record_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+            }
+          ],
+          "planned_target": {
+            "provider_id": "provider_01",
+            "product_id": null,
+            "model_id": null,
+            "model_alias": "model_alias_01"
+          },
+          "planned_interface": {
+            "interface_id": "interface_01",
+            "interface_type_id": "API",
+            "interface_version": "2026-07"
+          },
+          "planned_execution_conditions": [
+            {
+              "condition_id": "network_access",
+              "planned_value": null
+            }
+          ],
+          "planned_generation_settings": {
+            "settings_state": "NOT_EXPOSED",
+            "settings": []
+          },
+          "planned_tool_conditions": {
+            "tool_mode": "NO_TOOLS",
+            "tools": []
+          },
+          "planned_session_conditions": {
+            "session_mode": "NEW_SESSION",
+            "memory_mode": "DISABLED",
+            "preexisting_context": "PROHIBITED",
+            "conditions": []
+          },
+          "planned_run_slots": [
+            {
+              "run_slot_id": "RUN-SLOT-01",
+              "test_record_id": "TC-L1-JSON-01",
+              "test_version": "v0.6.1",
+              "repetition_index": 1
+            }
+          ],
+          "capture_requirements": [],
+          "validation_requirements": [],
+          "rater_requirements": [],
+          "manifest_status": "DRAFT",
+          "prepared_by": {
+            "actor_id": "tool_actor_01",
+            "actor_kind": "TOOL",
+            "role_id": "EXECUTION_OPERATOR"
+          },
+          "prepared_timestamp_utc": "2026-07-28T12:00:00Z"
         }
       ]
     },

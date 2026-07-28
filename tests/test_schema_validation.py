@@ -81,7 +81,7 @@ class SchemaValidationHarnessTests(unittest.TestCase):
         self.assertEqual(summary.schema_count, 6)
         self.assertEqual(summary.vector_file_count, 6)
         self.assertEqual(summary.valid_count, 80)
-        self.assertEqual(summary.invalid_count, 289)
+        self.assertEqual(summary.invalid_count, 290)
 
     def test_malformed_schema_json_is_classified(self) -> None:
         temporary, root = self._temporary_repository()
